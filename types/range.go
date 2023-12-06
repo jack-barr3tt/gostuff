@@ -1,4 +1,4 @@
-package ranges
+package types
 
 type Range struct {
 	Start int

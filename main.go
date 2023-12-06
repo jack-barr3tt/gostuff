@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/jack-barr3tt/gostuff/chars"
-	"github.com/jack-barr3tt/gostuff/ranges"
 	"github.com/jack-barr3tt/gostuff/slices"
 	"github.com/jack-barr3tt/gostuff/strings"
+	"github.com/jack-barr3tt/gostuff/types"
 )
 
 // I use this to test the packages 👍
@@ -31,17 +31,17 @@ func main() {
 
 	println(chars.CharIsDigit('1'))
 
-	digits := ranges.Range{Start: 0, End: 9}
+	digits := types.Range{Start: 0, End: 9}
 
 	fmt.Println("digits:", digits)
 
 	println(digits.Contains(5))
 	println(digits.Contains(10))
 
-	fmt.Println(digits.SubtractRange(ranges.Range{Start: 3, End: 5}))
-	fmt.Println(digits.SubtractRange(ranges.Range{Start: 0, End: 9}))
-	fmt.Println(digits.SubtractRange(ranges.Range{Start: 0, End: 5}))
-	fmt.Println(digits.SubtractRange(ranges.Range{Start: 3, End: 20}))
+	fmt.Println(digits.SubtractRange(types.Range{Start: 3, End: 5}))
+	fmt.Println(digits.SubtractRange(types.Range{Start: 0, End: 9}))
+	fmt.Println(digits.SubtractRange(types.Range{Start: 0, End: 5}))
+	fmt.Println(digits.SubtractRange(types.Range{Start: 3, End: 20}))
 
 	fmt.Println(digits.SplitAfter(5))
 
