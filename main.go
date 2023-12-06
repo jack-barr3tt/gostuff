@@ -46,4 +46,15 @@ func main() {
 	fmt.Println(digits.SplitAfter(5))
 
 	fmt.Println(slices.Zip([]int{1, 2, 3}, []string{"a", "b", "c"}))
+
+	nums1 := []int{5, 9, 2, 4, 7, 1, 3, 8, 6}
+	nums2 := []int{3, 8, 6, 5, 9, 2, 4, 7, 1}
+
+	numsCombined := slices.Zip(nums1, nums2)
+
+	numsIsGreater := slices.Map(func(nums types.Pair[int, int]) bool {
+		return nums.First > nums.Second
+	}, numsCombined)
+
+	fmt.Println(numsIsGreater)
 }

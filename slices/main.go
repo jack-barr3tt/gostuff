@@ -3,6 +3,8 @@ package slices
 import (
 	"math"
 	"strconv"
+
+	"github.com/jack-barr3tt/gostuff/types"
 )
 
 // Map HOF
@@ -43,11 +45,11 @@ func StrsToInts(l []string) []int {
 }
 
 // Zip together two slices
-func Zip[A any, B any](a []A, b []B) [][2]any {
+func Zip[A any, B any](a []A, b []B) []types.Pair[A, B] {
 	length := int(math.Min(float64(len(a)), float64(len(b))))
-	out := make([][2]any, length)
+	out := make([]types.Pair[A, B], length)
 	for i := 0; i < length; i++ {
-		out[i] = [2]any{a[i], b[i]}
+		out[i] = types.Pair[A, B]{First: a[i], Second: b[i]}
 	}
 	return out
 }
