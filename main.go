@@ -44,4 +44,6 @@ func main() {
 	fmt.Println(digits.SubtractRange(ranges.Range{Start: 3, End: 20}))
 
 	fmt.Println(digits.SplitAfter(5))
+
+	fmt.Println(slices.Zip([]int{1, 2, 3}, []string{"a", "b", "c"}))
 }
