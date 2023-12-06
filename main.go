@@ -57,4 +57,10 @@ func main() {
 	}, numsCombined)
 
 	fmt.Println(numsIsGreater)
+
+	multiNums := [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}
+
+	fmt.Println(slices.Flat(multiNums))
+
+	fmt.Println(slices.Combos([]int{1, 2, 3}, []string{"a", "b", "c"}))
 }

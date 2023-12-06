@@ -53,3 +53,37 @@ func Zip[A any, B any](a []A, b []B) []types.Pair[A, B] {
 	}
 	return out
 }
+
+// Flatten a slice of slices
+func Flat[A any](l [][]A) []A {
+	out := make([]A, 0)
+	for _, v := range l {
+		out = append(out, v...)
+	}
+	return out
+}
+
+// Apply a function to each element of a slice and flatten the result
+func FlatMap[A any, B any](fn func(A) []B, l []A) []B {
+	out := make([]B, 0)
+	for _, v := range l {
+		out = append(out, fn(v)...)
+	}
+	return out
+}
+
+// Pair every element of one slice with every element of another slice and apply a function to each pair
+func CombosMap[A, B, C any](fn func(A, B) C, a []A, b []B) []C {
+	out := make([]C, 0)
+	for _, v := range a {
+		for _, w := range b {
+			out = append(out, fn(v, w))
+		}
+	}
+	return out
+}
+
+// Pair every element of one slice with every element of another slice
+func Combos[A, B any](a []A, b []B) []types.Pair[A, B] {
+	return CombosMap(func(a A, b B) types.Pair[A, B] { return types.Pair[A, B]{First: a, Second: b} }, a, b)
+}
