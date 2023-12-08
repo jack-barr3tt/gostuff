@@ -87,3 +87,13 @@ func CombosMap[A, B, C any](fn func(A, B) C, a []A, b []B) []C {
 func Combos[A, B any](a []A, b []B) []types.Pair[A, B] {
 	return CombosMap(func(a A, b B) types.Pair[A, B] { return types.Pair[A, B]{First: a, Second: b} }, a, b)
 }
+
+// Check if any element of a slice satisfies a predicate
+func Some[I any](fn func(I) bool, l []I) bool {
+	for _, v := range l {
+		if fn(v) {
+			return true
+		}
+	}
+	return false
+}
