@@ -7,7 +7,7 @@ import (
 	"github.com/jack-barr3tt/gostuff/slices"
 )
 
-var numregex = regexp.MustCompile(`\d+`)
+var numregex = regexp.MustCompile(`-?\d+`)
 
 func GetNum(s string) int {
 	num, _ := strconv.Atoi(numregex.FindString(s))
