@@ -21,3 +21,10 @@ func FindLCM(numbers []int) int {
 	}
 	return result
 }
+
+func Abs[T ~int | ~float64 | ~int64 | ~float32](n T) T {
+	if n < 0 {
+		return -n
+	}
+	return n
+}

@@ -27,3 +27,15 @@ func TestFindLCM(t *testing.T) {
 
 	test.AssertEqual(t, FindLCM([]int{6, 27, 55, 121}), 32670)
 }
+
+func TestAbs(t *testing.T) {
+	test.AssertEqual(t, Abs(0), 0)
+
+	test.AssertEqual(t, Abs(-1), 1)
+
+	test.AssertEqual(t, Abs(1), 1)
+
+	test.AssertEqual(t, Abs(-1.0), 1.0)
+
+	test.AssertEqual(t, Abs(1.0), 1.0)
+}
