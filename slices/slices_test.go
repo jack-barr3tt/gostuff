@@ -185,3 +185,14 @@ func TestFrequency(t *testing.T) {
 	// test multiple elements
 	test.AssertEqual(t, Frequency([]int{1, 1, 2, 3, 3, 3}), map[int]int{1: 2, 2: 1, 3: 3})
 }
+
+func TestRemoveAt(t *testing.T) {
+	a := []int{1, 2, 3, 4, 5}
+	// check element removed
+	test.AssertEqual(t, RemoveAt(a, 2), []int{1, 2, 4, 5})
+	// check that the original slice is not modified
+	test.AssertEqual(t, a, []int{1, 2, 3, 4, 5})
+
+	// test empty
+	test.AssertEqual(t, RemoveAt([]int{}, 0), []int{})
+}

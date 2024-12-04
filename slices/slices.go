@@ -132,3 +132,12 @@ func Frequency[A comparable](l []A) map[A]int {
 	}
 	return out
 }
+
+func RemoveAt[A any](l []A, x int) []A {
+	if x < 0 || x >= len(l) {
+		return l
+	}
+	result := make([]A, 0, len(l)-1)
+	result = append(result, l[:x]...)
+	return append(result, l[x+1:]...)
+}
