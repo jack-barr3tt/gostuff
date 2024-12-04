@@ -97,3 +97,27 @@ func Some[I any](fn func(I) bool, l []I) bool {
 	}
 	return false
 }
+
+func StartsWith[A comparable](l []A, prefix []A) bool {
+	if len(l) < len(prefix) {
+		return false
+	}
+	for i, v := range prefix {
+		if v != l[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func Equals[A comparable](a []A, b []A) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
+}
