@@ -28,7 +28,7 @@ func Filter[I any](fn func(I) bool, l []I) []I {
 }
 
 // Reduce HOF
-func Reduce[I any, O any](fn func(I, O) O, l []I, init O) O {
+func Reduce[Curr any, Acc any](fn func(Curr, Acc) Acc, l []Curr, init Acc) Acc {
 	out := init
 	for _, v := range l {
 		out = fn(v, out)
@@ -41,7 +41,10 @@ func StrsToInts(l []string) []int {
 	return Map(func(s string) int {
 		num, _ := strconv.Atoi(s)
 		return num
-	}, l)
+	}, Filter(func(el string) bool {
+		_, err := strconv.Atoi(el)
+		return err == nil
+	}, l))
 }
 
 // Zip together two slices
@@ -72,6 +75,11 @@ func FlatMap[A any, B any](fn func(A) []B, l []A) []B {
 	return out
 }
 
+// Pair every element of one slice with every element of another slice
+func Combos[A, B any](a []A, b []B) []types.Pair[A, B] {
+	return CombosMap(func(a A, b B) types.Pair[A, B] { return types.Pair[A, B]{First: a, Second: b} }, a, b)
+}
+
 // Pair every element of one slice with every element of another slice and apply a function to each pair
 func CombosMap[A, B, C any](fn func(A, B) C, a []A, b []B) []C {
 	out := make([]C, 0)
@@ -81,11 +89,6 @@ func CombosMap[A, B, C any](fn func(A, B) C, a []A, b []B) []C {
 		}
 	}
 	return out
-}
-
-// Pair every element of one slice with every element of another slice
-func Combos[A, B any](a []A, b []B) []types.Pair[A, B] {
-	return CombosMap(func(a A, b B) types.Pair[A, B] { return types.Pair[A, B]{First: a, Second: b} }, a, b)
 }
 
 // Check if any element of a slice satisfies a predicate

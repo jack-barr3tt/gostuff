@@ -11,9 +11,9 @@ type Case[A, B any] struct {
 	Expected B
 }
 
-func AssertEqual[A any](t *testing.T, a A, b A) {
-	if !reflect.DeepEqual(a, b) {
-		t.Errorf("Expected %v, got %v", a, b)
+func AssertEqual[A any](t *testing.T, expected A, actual A) {
+	if !reflect.DeepEqual(expected, actual) {
+		t.Errorf("Expected %v, got %v", expected, actual)
 	}
 }
 
