@@ -1,7 +1,11 @@
 package chars
 
 func CharInRange(char rune, start rune, end rune) bool {
-	return char >= start && char <= end
+	if start <= end {
+		return char >= start && char <= end
+	} else {
+		return char >= end && char <= start
+	}
 }
 
 func CharIsDigit(char rune) bool {
