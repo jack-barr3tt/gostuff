@@ -36,6 +36,16 @@ func Reduce[Curr any, Acc any](fn func(Curr, Acc) Acc, l []Curr, init Acc) Acc {
 	return out
 }
 
+// FindIndex HOF
+func FindIndex[I any](fn func(I) bool, l []I) int {
+	for i, v := range l {
+		if fn(v) {
+			return i
+		}
+	}
+	return -1
+}
+
 // Function to convert a slice of strings to a slice of ints
 func StrsToInts(l []string) []int {
 	return Map(func(s string) int {
@@ -101,6 +111,7 @@ func Some[I any](fn func(I) bool, l []I) bool {
 	return false
 }
 
+// Check if a slice starts with another slice
 func StartsWith[A comparable](l []A, prefix []A) bool {
 	if len(l) < len(prefix) {
 		return false
@@ -113,6 +124,7 @@ func StartsWith[A comparable](l []A, prefix []A) bool {
 	return true
 }
 
+// Check if two slices contain all the same elements
 func Equals[A comparable](a []A, b []A) bool {
 	if len(a) != len(b) {
 		return false
@@ -125,6 +137,7 @@ func Equals[A comparable](a []A, b []A) bool {
 	return true
 }
 
+// Count the frequency of each element in a slice
 func Frequency[A comparable](l []A) map[A]int {
 	out := make(map[A]int)
 	for _, v := range l {
@@ -133,6 +146,7 @@ func Frequency[A comparable](l []A) map[A]int {
 	return out
 }
 
+// Remove an element from a slice by index
 func RemoveAt[A any](l []A, x int) []A {
 	if x < 0 || x >= len(l) {
 		return l
