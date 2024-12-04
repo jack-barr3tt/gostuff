@@ -124,3 +124,11 @@ func Equals[A comparable](a []A, b []A) bool {
 	}
 	return true
 }
+
+func Frequency[A comparable](l []A) map[A]int {
+	out := make(map[A]int)
+	for _, v := range l {
+		out[v]++
+	}
+	return out
+}

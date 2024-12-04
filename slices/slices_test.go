@@ -174,3 +174,14 @@ func TestEquals(t *testing.T) {
 	// test different lengths
 	test.AssertEqual(t, Equals([]int{1, 2, 3}, []int{1, 2}), false)
 }
+
+func TestFrequency(t *testing.T) {
+	// test empty
+	test.AssertEqual(t, Frequency([]int{}), map[int]int{})
+
+	// test one element
+	test.AssertEqual(t, Frequency([]int{1}), map[int]int{1: 1})
+
+	// test multiple elements
+	test.AssertEqual(t, Frequency([]int{1, 1, 2, 3, 3, 3}), map[int]int{1: 2, 2: 1, 3: 3})
+}
