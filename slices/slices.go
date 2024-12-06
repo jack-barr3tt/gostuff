@@ -135,6 +135,19 @@ func NCombosUnique[A comparable](l []A, n int) [][]A {
 	return out
 }
 
+// Checks if a subsequence at the end of the slice of any length repeats at least twice direct before it
+func HasRepeatingSuffix[A comparable](l []A, minLength int) bool {
+	if len(l) < minLength*2 {
+		return false
+	}
+	for i := minLength; i < len(l)/2; i++ {
+		if Equals(l[len(l)-i:], l[len(l)-2*i:len(l)-i]) {
+			return true
+		}
+	}
+	return false
+}
+
 // Check if any element of a slice satisfies a predicate
 func Some[I any](fn func(I) bool, l []I) bool {
 	for _, v := range l {

@@ -197,6 +197,20 @@ func TestCombosMap(t *testing.T) {
 	)
 }
 
+func TestHasRepeatingSuffix(t *testing.T) {
+	// test empty
+	test.AssertEqual(t, HasRepeatingSuffix([]int{}, 1), false)
+
+	// test no repeating suffix
+	test.AssertEqual(t, HasRepeatingSuffix([]int{1, 2, 3, 4, 5}, 1), false)
+
+	// test repeating suffix
+	test.AssertEqual(t, HasRepeatingSuffix([]int{1, 2, 3, 4, 5, 1, 2, 1, 2}, 1), true)
+
+	// test no repeating suffix
+	test.AssertEqual(t, HasRepeatingSuffix([]int{1, 2, 3, 4, 5, 1, 2, 1, 2, 2}, 2), false)
+}
+
 func TestSome(t *testing.T) {
 	// test empty
 	test.AssertEqual(t, Some(func(x int) bool { return x > 0 }, []int{}), false)
