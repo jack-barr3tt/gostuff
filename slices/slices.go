@@ -3,6 +3,7 @@ package slices
 import (
 	"math"
 	"strconv"
+	"sync"
 
 	"github.com/jack-barr3tt/gostuff/types"
 )
@@ -201,4 +202,38 @@ func RemoveAt[A any](l []A, x int) []A {
 	result := make([]A, 0, len(l)-1)
 	result = append(result, l[:x]...)
 	return append(result, l[x+1:]...)
+}
+
+func ParallelMap[A any, B any](fn func(A) B, inputs []A, coreCount int) []B {
+	var wg sync.WaitGroup
+	results := make([][]B, coreCount)
+	chunkSize := (len(inputs) + coreCount - 1) / coreCount
+
+	// Launch workers
+	for i := 0; i < coreCount; i++ {
+		start := i * chunkSize
+		end := (i + 1) * chunkSize
+		if end > len(inputs) {
+			end = len(inputs)
+		}
+
+		wg.Add(1)
+		go func(index int, chunk []A) {
+			defer wg.Done()
+			workerResults := make([]B, len(chunk))
+			for j, item := range chunk {
+				workerResults[j] = fn(item)
+			}
+			results[index] = workerResults
+		}(i, inputs[start:end])
+	}
+
+	wg.Wait()
+
+	var combined []B
+	for _, r := range results {
+		combined = append(combined, r...)
+	}
+
+	return combined
 }

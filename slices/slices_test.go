@@ -3,6 +3,7 @@ package slices
 import (
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/jack-barr3tt/gostuff/test"
 	"github.com/jack-barr3tt/gostuff/types"
@@ -273,4 +274,27 @@ func TestRemoveAt(t *testing.T) {
 
 	// test empty
 	test.AssertEqual(t, RemoveAt([]int{}, 0), []int{})
+}
+
+func TestParallelMap(t *testing.T) {
+	// test same input and output type
+	test.AssertEqual(t, ParallelMap(func(x int) int { return x * 2 }, []int{1, 2, 3}, 4), []int{2, 4, 6})
+
+	// test different input and output type
+	test.AssertEqual(t, ParallelMap(func(x string) int { return len(x) }, []string{"a", "ab", "abc"}, 4), []int{1, 2, 3})
+
+	testFunc := func(x int) int {
+		time.Sleep(time.Second)
+		return x * 2
+	}
+
+	// test with 1 worker
+	start := time.Now()
+	ParallelMap(testFunc, []int{1, 2, 3, 4, 5}, 1)
+	test.AssertEqual(t, time.Since(start) > 5*time.Second, true)
+
+	// test with 5 workers
+	start = time.Now()
+	ParallelMap(testFunc, []int{1, 2, 3, 4, 5}, 5)
+	test.AssertEqual(t, time.Since(start) < 2*time.Second, true)
 }
