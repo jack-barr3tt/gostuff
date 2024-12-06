@@ -99,3 +99,18 @@ func (m Maze) LocateAll(r rune) []Point {
 func (m Maze) Set(p Point, r rune) {
 	m[p[1]][p[0]] = r
 }
+
+func (m Maze) Clone() Maze {
+	clone := make([][]rune, len(m))
+
+	for i, row := range m {
+		clone[i] = make([]rune, len(row))
+		copy(clone[i], row)
+	}
+
+	return clone
+}
+
+func (p Point) Clone() Point {
+	return Point{p[0], p[1]}
+}

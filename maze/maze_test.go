@@ -97,3 +97,32 @@ func TestSet(t *testing.T) {
 	maze.Set(Point{1, 1}, 'X')
 	test.AssertEqual(t, maze.At(Point{1, 1}), 'X')
 }
+
+func TestMazeClone(t *testing.T) {
+	maze := NewMaze(`######
+#   *#
+#    #
+#    #
+# L  #
+######`)
+
+	clone := maze.Clone()
+	test.AssertEqual(t, maze, clone)
+
+	clone.Set(Point{2, 1}, 'X')
+
+	test.AssertEqual(t, maze.At(Point{2, 1}), 'L')
+	test.AssertEqual(t, clone.At(Point{2, 1}), 'X')
+}
+
+func TestPointClone(t *testing.T) {
+	p := Point{1, 2}
+	clone := p.Clone()
+
+	test.AssertEqual(t, p, clone)
+
+	clone[0] = 3
+
+	test.AssertEqual(t, p[0], 1)
+	test.AssertEqual(t, clone[0], 3)
+}
