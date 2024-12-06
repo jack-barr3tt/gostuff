@@ -65,12 +65,12 @@ func TestAt(t *testing.T) {
 	maze := NewMaze(`######
 #   *#
 #    #
-# L  #
 #    #
+# L  #
 ######`)
 
 	test.AssertEqual(t, maze.At(Point{1, 1}), ' ')
-	test.AssertEqual(t, maze.At(Point{2, 2}), 'L')
+	test.AssertEqual(t, maze.At(Point{2, 1}), 'L')
 	test.AssertEqual(t, maze.At(Point{4, 4}), '*')
 }
 
@@ -78,20 +78,20 @@ func TestLocateAll(t *testing.T) {
 	maze := NewMaze(`######
 #   *#
 #    #
-# L  #
 #    #
+# L  #
 ######`)
 
 	test.AssertEqual(t, maze.LocateAll('*'), []Point{{4, 4}})
-	test.AssertEqual(t, maze.LocateAll('L'), []Point{{2, 2}})
+	test.AssertEqual(t, maze.LocateAll('L'), []Point{{2, 1}})
 }
 
 func TestSet(t *testing.T) {
 	maze := NewMaze(`######
 #   *#
 #    #
-# L  #
 #    #
+# L  #
 ######`)
 
 	maze.Set(Point{1, 1}, 'X')

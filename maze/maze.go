@@ -71,7 +71,7 @@ func (d Direction) RotateDirection(r Rotation) Direction {
 func (m Maze) Move(p Point, d Direction) (Point, bool) {
 	newPos := Point{p[0] + d[0], p[1] + d[1]}
 
-	if newPos[0] < 0 || newPos[0] >= len(m) || newPos[1] < 0 || newPos[1] >= len(m[0]) {
+	if newPos[1] < 0 || newPos[1] >= len(m) || newPos[0] < 0 || newPos[0] >= len(m[0]) {
 		return p, false
 	}
 
@@ -79,7 +79,7 @@ func (m Maze) Move(p Point, d Direction) (Point, bool) {
 }
 
 func (m Maze) At(p Point) rune {
-	return m[p[0]][p[1]]
+	return m[p[1]][p[0]]
 }
 
 func (m Maze) LocateAll(r rune) []Point {
@@ -88,7 +88,7 @@ func (m Maze) LocateAll(r rune) []Point {
 	for i, row := range m {
 		for j, cell := range row {
 			if cell == r {
-				points = append(points, Point{i, j})
+				points = append(points, Point{j, i})
 			}
 		}
 	}
@@ -97,5 +97,5 @@ func (m Maze) LocateAll(r rune) []Point {
 }
 
 func (m Maze) Set(p Point, r rune) {
-	m[p[0]][p[1]] = r
+	m[p[1]][p[0]] = r
 }
