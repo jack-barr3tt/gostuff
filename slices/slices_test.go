@@ -121,6 +121,59 @@ func TestCombos(t *testing.T) {
 	test.AssertEqual(t, Combos([]int{}, []string{"a", "b", "c"}), []types.Pair[int, string]{})
 }
 
+func TestNCombos(t *testing.T) {
+	// test n = 0
+	test.AssertEqual(t, NCombos([]int{1, 2, 3}, 0), [][]int{{}})
+
+	// test empty
+	test.AssertEqual(t, NCombos([]int{}, 1), [][]int{})
+
+	// test n = 1
+	test.AssertEqual(t, NCombos([]int{1, 2, 3}, 1), [][]int{{1}, {2}, {3}})
+
+	// test n = 2
+	test.AssertEqual(t, NCombos([]int{1, 2, 3}, 2), [][]int{
+		{1, 1}, {1, 2}, {1, 3},
+		{2, 1}, {2, 2}, {2, 3},
+		{3, 1}, {3, 2}, {3, 3},
+	})
+
+	// test n = 3
+	test.AssertEqual(t, NCombos([]int{1, 2, 3}, 3), [][]int{
+		{1, 1, 1}, {1, 1, 2}, {1, 1, 3},
+		{1, 2, 1}, {1, 2, 2}, {1, 2, 3},
+		{1, 3, 1}, {1, 3, 2}, {1, 3, 3},
+		{2, 1, 1}, {2, 1, 2}, {2, 1, 3},
+		{2, 2, 1}, {2, 2, 2}, {2, 2, 3},
+		{2, 3, 1}, {2, 3, 2}, {2, 3, 3},
+		{3, 1, 1}, {3, 1, 2}, {3, 1, 3},
+		{3, 2, 1}, {3, 2, 2}, {3, 2, 3},
+		{3, 3, 1}, {3, 3, 2}, {3, 3, 3},
+	})
+}
+
+func TestNCombosUnique(t *testing.T) {
+	// test n = 0
+	test.AssertEqual(t, NCombosUnique([]int{1, 2, 3}, 0), [][]int{{}})
+
+	// test empty
+	test.AssertEqual(t, NCombosUnique([]int{}, 1), [][]int{})
+
+	// test n = 1
+	test.AssertEqual(t, NCombosUnique([]int{1, 2, 3}, 1), [][]int{{1}, {2}, {3}})
+
+	// test n = 2
+	test.AssertEqual(t, NCombosUnique([]int{1, 2, 3}, 2), [][]int{
+		{1, 2}, {1, 3},
+		{2, 3},
+	})
+
+	// test n = 3
+	test.AssertEqual(t, NCombosUnique([]int{1, 2, 3}, 3), [][]int{
+		{1, 2, 3},
+	})
+}
+
 func TestCombosMap(t *testing.T) {
 	// test equal lengths same type
 	test.AssertEqual(t, CombosMap(

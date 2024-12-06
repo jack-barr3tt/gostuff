@@ -101,6 +101,40 @@ func CombosMap[A, B, C any](fn func(A, B) C, a []A, b []B) []C {
 	return out
 }
 
+// Generate all possible combos when elements of a slice are paied with themselves n times
+func NCombos[A comparable](l []A, n int) [][]A {
+	if n == 0 {
+		return [][]A{{}}
+	}
+	if len(l) == 0 {
+		return [][]A{}
+	}
+	out := make([][]A, 0)
+	for _, v := range l {
+		for _, w := range NCombos(l, n-1) {
+			out = append(out, append([]A{v}, w...))
+		}
+	}
+	return out
+}
+
+// Generate all possible combos when elements of a slice are paied with themselves n times without duplicates
+func NCombosUnique[A comparable](l []A, n int) [][]A {
+	if n == 0 {
+		return [][]A{{}}
+	}
+	if len(l) == 0 {
+		return [][]A{}
+	}
+	out := make([][]A, 0)
+	for i, v := range l {
+		for _, w := range NCombosUnique(l[i+1:], n-1) {
+			out = append(out, append([]A{v}, w...))
+		}
+	}
+	return out
+}
+
 // Check if any element of a slice satisfies a predicate
 func Some[I any](fn func(I) bool, l []I) bool {
 	for _, v := range l {
