@@ -58,7 +58,7 @@ func StrsToInts(l []string) []int {
 }
 
 // Zip together two slices
-func Zip[A any, B any](a []A, b []B) []types.Pair[A, B] {
+func Zip[A comparable, B comparable](a []A, b []B) []types.Pair[A, B] {
 	length := int(math.Min(float64(len(a)), float64(len(b))))
 	out := make([]types.Pair[A, B], length)
 	for i := 0; i < length; i++ {
@@ -86,7 +86,7 @@ func FlatMap[A any, B any](fn func(A) []B, l []A) []B {
 }
 
 // Pair every element of one slice with every element of another slice
-func Combos[A, B any](a []A, b []B) []types.Pair[A, B] {
+func Combos[A, B comparable](a []A, b []B) []types.Pair[A, B] {
 	return CombosMap(func(a A, b B) types.Pair[A, B] { return types.Pair[A, B]{First: a, Second: b} }, a, b)
 }
 
