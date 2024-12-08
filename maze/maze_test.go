@@ -126,3 +126,26 @@ func TestPointClone(t *testing.T) {
 	test.AssertEqual(t, p[0], 1)
 	test.AssertEqual(t, clone[0], 3)
 }
+
+func TestDirectionBetween(t *testing.T) {
+	// check standard compass directions
+	test.AssertEqual(t, DirectionBetween(Point{0, 0}, Point{1, 0}), East)
+	test.AssertEqual(t, DirectionBetween(Point{0, 0}, Point{0, 1}), North)
+	test.AssertEqual(t, DirectionBetween(Point{0, 0}, Point{-1, 0}), West)
+	test.AssertEqual(t, DirectionBetween(Point{0, 0}, Point{0, -1}), South)
+
+	// test ad-hoc directions
+	test.AssertEqual(t, DirectionBetween(Point{4, 6}, Point{5, 4}), Direction{1, -2})
+	test.AssertEqual(t, DirectionBetween(Point{4, 6}, Point{2, 5}), Direction{-2, -1})
+}
+
+func TestDirectionInverse(t *testing.T) {
+	// check standard compass directions
+	test.AssertEqual(t, North.Inverse(), South)
+	test.AssertEqual(t, East.Inverse(), West)
+	test.AssertEqual(t, South.Inverse(), North)
+	test.AssertEqual(t, West.Inverse(), East)
+
+	// test ad-hoc directions
+	test.AssertEqual(t, Direction{1, -2}.Inverse(), Direction{-1, 2})
+}

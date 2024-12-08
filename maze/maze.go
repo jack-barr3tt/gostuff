@@ -68,6 +68,10 @@ func (d Direction) RotateDirection(r Rotation) Direction {
 	return d
 }
 
+func (d Direction) Inverse() Direction {
+	return Direction{-d[0], -d[1]}
+}
+
 func (m Maze) Move(p Point, d Direction) (Point, bool) {
 	newPos := Point{p[0] + d[0], p[1] + d[1]}
 
@@ -113,4 +117,8 @@ func (m Maze) Clone() Maze {
 
 func (p Point) Clone() Point {
 	return Point{p[0], p[1]}
+}
+
+func DirectionBetween(a, b Point) Direction {
+	return Direction{b[0] - a[0], b[1] - a[1]}
 }
