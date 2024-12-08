@@ -298,3 +298,14 @@ func TestParallelMap(t *testing.T) {
 	ParallelMap(testFunc, []int{1, 2, 3, 4, 5}, 5)
 	test.AssertEqual(t, time.Since(start) < 2*time.Second, true)
 }
+
+func TestUnique(t *testing.T) {
+	// test empty
+	test.AssertEqual(t, Unique([]int{}), []int{})
+
+	// test no duplicates
+	test.AssertEqual(t, Unique([]int{1, 2, 3}), []int{1, 2, 3})
+
+	// test duplicates
+	test.AssertEqual(t, Unique([]int{1, 2, 1, 3, 2, 3}), []int{1, 2, 3})
+}

@@ -237,3 +237,15 @@ func ParallelMap[A any, B any](fn func(A) B, inputs []A, coreCount int) []B {
 
 	return combined
 }
+
+func Unique[A comparable](l []A) []A {
+	out := make([]A, 0)
+	seen := make(map[A]bool)
+	for _, v := range l {
+		if _, ok := seen[v]; !ok {
+			out = append(out, v)
+			seen[v] = true
+		}
+	}
+	return out
+}
