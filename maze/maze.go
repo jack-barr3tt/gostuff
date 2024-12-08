@@ -69,7 +69,11 @@ func (d Direction) RotateDirection(r Rotation) Direction {
 }
 
 func (d Direction) Inverse() Direction {
-	return Direction{-d[0], -d[1]}
+	return d.Multiply(-1)
+}
+
+func (d Direction) Multiply(n int) Direction {
+	return Direction{d[0] * n, d[1] * n}
 }
 
 func (m Maze) Move(p Point, d Direction) (Point, bool) {
