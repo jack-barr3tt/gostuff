@@ -309,3 +309,14 @@ func TestUnique(t *testing.T) {
 	// test duplicates
 	test.AssertEqual(t, Unique([]int{1, 2, 1, 3, 2, 3}), []int{1, 2, 3})
 }
+
+func TestRepeat(t *testing.T) {
+	// test empty
+	test.AssertEqual(t, Repeat(1, 0), []int{})
+
+	// test 3 time
+	test.AssertEqual(t, Repeat(1, 3), []int{1, 1, 1})
+
+	// test 5 times
+	test.AssertEqual(t, Repeat("a", 5), []string{"a", "a", "a", "a", "a"})
+}

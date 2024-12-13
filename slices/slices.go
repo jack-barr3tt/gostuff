@@ -249,3 +249,11 @@ func Unique[A comparable](l []A) []A {
 	}
 	return out
 }
+
+func Repeat[A any](value A, count int) []A {
+	out := make([]A, count)
+	for i := 0; i < count; i++ {
+		out[i] = value
+	}
+	return out
+}
