@@ -46,7 +46,7 @@ func TestVirtualAt(t *testing.T) {
 
 func TestVirtualShortestPath(t *testing.T) {
 	// test case inspired by advent of code 2024 day 13
-	g := NewVirtualGraph(func(n *Node) []Edge {
+	g1 := NewVirtualGraph(func(n *Node) []Edge {
 		pos := stringstuff.GetNums(n.Name)
 
 		return []Edge{
@@ -55,13 +55,32 @@ func TestVirtualShortestPath(t *testing.T) {
 		}
 	}, "0,0")
 
-	_, length := g.ShortestPath("0,0", "8400,5400", func(n Node) int {
+	_, length1 := g1.ShortestPath("0,0", "8400,5400", func(n Node) int {
 		pos := stringstuff.GetNums(n.Name)
 		if pos[0] > 8400 || pos[1] > 5400 {
-			return 1 << 31
+			return -1
 		}
 		return 8400 - pos[0] + 5400 - pos[1]
 	})
 
-	test.AssertEqual(t, length, 280)
+	test.AssertEqual(t, length1, 280)
+
+	g2 := NewVirtualGraph(func(n *Node) []Edge {
+		pos := stringstuff.GetNums(n.Name)
+
+		return []Edge{
+			{Node: fmt.Sprintf("%d,%d", pos[0]+26, pos[1]+66), Cost: 3},
+			{Node: fmt.Sprintf("%d,%d", pos[0]+67, pos[1]+21), Cost: 1},
+		}
+	}, "0,0")
+
+	_, length2 := g2.ShortestPath("0,0", "12748,12176", func(n Node) int {
+		pos := stringstuff.GetNums(n.Name)
+		if pos[0] > 12748 || pos[1] > 12176 {
+			return -1
+		}
+		return 12748 - pos[0] + 12176 - pos[1]
+	})
+
+	test.AssertEqual(t, length2, -1)
 }

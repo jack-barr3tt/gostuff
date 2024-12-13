@@ -43,6 +43,9 @@ func (g VirtualGraph) At(name string) (*Node, bool) {
 	return n, ok
 }
 
+// ShortestPath returns the shortest path from source to target using the A* algorithm.
+// The heuristic function should return -1 if the node is not reachable.
+// The heuristic function should return lower values for nodes that are more favorable.
 func (g VirtualGraph) ShortestPath(source, target string, heuristic func(n Node) int) ([]string, int) {
 	// check the source node exists
 	if _, ok := g.At(source); !ok {
@@ -76,7 +79,7 @@ func (g VirtualGraph) ShortestPath(source, target string, heuristic func(n Node)
 		for _, edge := range currNode.Adj {
 			newCost := costSoFar[curr] + edge.Cost
 
-			if _, ok := costSoFar[edge.Node]; !ok || newCost < costSoFar[edge.Node] {
+			if _, ok := costSoFar[edge.Node]; (!ok || newCost < costSoFar[edge.Node]) && heuristic(*g.nodeIds[edge.Node]) != -1 {
 				cameFrom[edge.Node] = curr
 				costSoFar[edge.Node] = newCost
 				costRemaining[edge.Node] = newCost + heuristic(*g.nodeIds[edge.Node])
