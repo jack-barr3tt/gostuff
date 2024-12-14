@@ -160,3 +160,7 @@ func TestDirectionMultiply(t *testing.T) {
 	// test ad-hoc directions
 	test.AssertEqual(t, Direction{1, -2}.Multiply(2), Direction{2, -4})
 }
+
+func TestPointUnsafeMove(t *testing.T) {
+	test.AssertEqual(t, Point{1, 2}.UnsafeMove(Direction{2, 3}), Point{3, 5})
+}

@@ -76,6 +76,10 @@ func (d Direction) Multiply(n int) Direction {
 	return Direction{d[0] * n, d[1] * n}
 }
 
+func (p Point) UnsafeMove(d Direction) Point {
+	return Point{p[0] + d[0], p[1] + d[1]}
+}
+
 func (m Maze) Move(p Point, d Direction) (Point, bool) {
 	newPos := Point{p[0] + d[0], p[1] + d[1]}
 
