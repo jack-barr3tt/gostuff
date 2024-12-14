@@ -28,3 +28,10 @@ func Abs[T ~int | ~float64 | ~int64 | ~float32](n T) T {
 	}
 	return n
 }
+
+func Max[T ~int | ~float64 | ~int64 | ~float32](a, b T) T {
+	if a > b {
+		return a
+	}
+	return b
+}

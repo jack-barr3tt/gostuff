@@ -39,3 +39,27 @@ func TestAbs(t *testing.T) {
 
 	test.AssertEqual(t, Abs(1.0), 1.0)
 }
+
+func TestMax(t *testing.T) {
+	test.AssertEqual(t, Max(0, 0), 0)
+
+	test.AssertEqual(t, Max(1, 0), 1)
+
+	test.AssertEqual(t, Max(0, 1), 1)
+
+	test.AssertEqual(t, Max(-1, 0), 0)
+
+	test.AssertEqual(t, Max(0, -1), 0)
+
+	test.AssertEqual(t, Max(-1, -1), -1)
+
+	test.AssertEqual(t, Max(1.0, 0.0), 1.0)
+
+	test.AssertEqual(t, Max(0.0, 1.0), 1.0)
+
+	test.AssertEqual(t, Max(-1.0, 0.0), 0.0)
+
+	test.AssertEqual(t, Max(0.0, -1.0), 0.0)
+
+	test.AssertEqual(t, Max(-1.0, -1.0), -1.0)
+}
