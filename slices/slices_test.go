@@ -79,6 +79,17 @@ func TestZip(t *testing.T) {
 	test.AssertEqual(t, Zip([]int{}, []string{}), []types.Pair[int, string]{})
 }
 
+func TestUnzip(t *testing.T) {
+	pairs := []types.Pair[int, string]{{First: 1, Second: "a"}, {First: 2, Second: "b"}, {First: 3, Second: "c"}}
+	a, b := Unzip(pairs)
+	test.AssertEqual(t, a, []int{1, 2, 3})
+	test.AssertEqual(t, b, []string{"a", "b", "c"})
+
+	a, b = Unzip([]types.Pair[int, string]{})
+	test.AssertEqual(t, a, []int{})
+	test.AssertEqual(t, b, []string{})
+}
+
 func TestFlat(t *testing.T) {
 	test.AssertEqual(t, Flat([][]int{{1, 2}, {3, 4}}), []int{1, 2, 3, 4})
 

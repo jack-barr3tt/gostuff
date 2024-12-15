@@ -68,6 +68,17 @@ func Zip[A comparable, B comparable](a []A, b []B) []types.Pair[A, B] {
 	return out
 }
 
+// Unzip a slice of pairs into two slices
+func Unzip[A comparable, B comparable](l []types.Pair[A, B]) ([]A, []B) {
+	a := make([]A, len(l))
+	b := make([]B, len(l))
+	for i, v := range l {
+		a[i] = v.First
+		b[i] = v.Second
+	}
+	return a, b
+}
+
 // Flatten a slice of slices
 func Flat[A any](l [][]A) []A {
 	out := make([]A, 0)
