@@ -15,3 +15,9 @@ func TestEquals(t *testing.T) {
 	test.AssertEqual(t, p1.Equals(p3), false)
 	test.AssertEqual(t, p2.Equals(p3), false)
 }
+
+func TestPairFromSlice(t *testing.T) {
+	s := []int{1, 2}
+	p := PairFromSlice(s)
+	test.AssertEqual(t, p, Pair[int, int]{First: 1, Second: 2})
+}
