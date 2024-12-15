@@ -132,10 +132,12 @@ func DirectionBetween(a, b Point) Direction {
 }
 
 func (m Maze) Print() {
+	output := ""
 	for i := range m {
 		for j := range m[len(m)-1-i] {
-			print(string(m[len(m)-1-i][j]))
+			output += string(m[len(m)-1-i][j])
 		}
-		println()
+		output += "\n"
 	}
+	println(output)
 }
