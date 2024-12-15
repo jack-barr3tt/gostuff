@@ -148,3 +148,28 @@ func TestMazeRotate(t *testing.T) {
 	rotated = maze.Rotate(180)
 	test.AssertEqual(t, rotated, expected180)
 }
+
+func TestSubMazeAt(t *testing.T) {
+	maze := NewMaze(`MMMSXXMASM
+MSAMXMSMSA
+AMXSXMAAMM
+MSAMASMSMX
+XMASAMXAMM
+XXAMMXXAMA
+SMSMSASXSS
+SAXAMASAAA
+MAMMMXMMMM
+MXMXAXMASX`)
+
+	subMaze := NewMaze(`S.S
+.A.
+M.M`)
+
+	test.AssertEqual(t, maze.SubMazeAt(subMaze, types.Point{0, 1}, []rune{'.'}), true)
+
+	subMaze2 := NewMaze(`M.S
+.A.
+M.S`)
+
+	test.AssertEqual(t, maze.SubMazeAt(subMaze2, types.Point{0, 1}, []rune{'.'}), false)
+}
