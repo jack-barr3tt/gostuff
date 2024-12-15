@@ -19,6 +19,10 @@ func TestNewPointDir(t *testing.T) {
 	test.AssertEqual(t, NewPointDir(types.Point{1, 2}, types.Direction{2, 4}), Line{2, 0})
 }
 
+func TestNewAXBYC(t *testing.T) {
+	test.AssertEqual(t, NewAXBYC(94, 22, 8400), Line{-94.0 / 22.0, 8400.0 / 22.0})
+}
+
 func TestSubX(t *testing.T) {
 	l := Line{1, 2}
 	test.AssertEqual(t, l.SubX(3), 5)
