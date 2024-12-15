@@ -49,3 +49,7 @@ func TestDirectionAdd(t *testing.T) {
 	// test ad-hoc directions
 	test.AssertEqual(t, Direction{1, -2}.Add(Direction{3, 4}), Direction{4, 2})
 }
+
+func TestDirFromSlice(t *testing.T) {
+	test.AssertEqual(t, Direction{1, 2}, DirFromSlice([]int{1, 2}))
+}
