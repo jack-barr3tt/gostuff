@@ -47,6 +47,9 @@ func Rationalize[T ~int | ~float64 | ~int64 | ~float32](n T, maxDenominator int)
 		if newDiff := Abs(float64(n) - float64(newA)/float64(i)); newDiff < diff {
 			a, b, diff = newA, i, newDiff
 		}
+		if diff == 0 {
+			break
+		}
 	}
 
 	return a, b
