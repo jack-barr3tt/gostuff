@@ -32,7 +32,14 @@ func TestSubY(t *testing.T) {
 func TestIntersectAt(t *testing.T) {
 	l1 := Line{1, 2}
 	l2 := Line{0.5, 4}
-	x, y := l1.IntersectsAt(l2)
+	x, y, ok := l1.IntersectsAt(l2)
 	test.AssertEqual(t, x, 4)
 	test.AssertEqual(t, y, 6)
+	test.AssertEqual(t, ok, true)
+
+	l3 := Line{1, 5}
+	x, y, ok = l1.IntersectsAt(l3)
+	test.AssertEqual(t, x, 0)
+	test.AssertEqual(t, y, 0)
+	test.AssertEqual(t, ok, false)
 }

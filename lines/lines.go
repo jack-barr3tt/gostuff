@@ -31,8 +31,11 @@ func (l Line) SubY(y float64) float64 {
 	return (y - l.c) / l.m
 }
 
-func (l Line) IntersectsAt(l2 Line) (float64, float64) {
+func (l Line) IntersectsAt(l2 Line) (float64, float64, bool) {
+	if l.m == l2.m {
+		return 0, 0, false
+	}
 	x := (l2.c - l.c) / (l.m - l2.m)
 	y := l.SubX(x)
-	return x, y
+	return x, y, true
 }
