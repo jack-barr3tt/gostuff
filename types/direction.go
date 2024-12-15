@@ -15,7 +15,7 @@ var (
 	SouthWest = Direction{-1, -1}
 )
 
-func (d Direction) RotateDirection(deg int) Direction {
+func (d Direction) Rotate(deg int) Direction {
 	rad := float64(deg) * math.Pi / 180.0
 
 	ct := math.Cos(rad)

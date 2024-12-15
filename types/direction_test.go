@@ -7,15 +7,15 @@ import (
 )
 
 func TestRotate(t *testing.T) {
-	test.AssertEqual(t, North.RotateDirection(90), East)
-	test.AssertEqual(t, North.RotateDirection(-90), West)
-	test.AssertEqual(t, North.RotateDirection(45), NorthEast)
-	test.AssertEqual(t, North.RotateDirection(-45), NorthWest)
+	test.AssertEqual(t, North.Rotate(90), East)
+	test.AssertEqual(t, North.Rotate(-90), West)
+	test.AssertEqual(t, North.Rotate(45), NorthEast)
+	test.AssertEqual(t, North.Rotate(-45), NorthWest)
 
-	test.AssertEqual(t, East.RotateDirection(90), South)
-	test.AssertEqual(t, East.RotateDirection(-90), North)
-	test.AssertEqual(t, East.RotateDirection(45), SouthEast)
-	test.AssertEqual(t, East.RotateDirection(-45), NorthEast)
+	test.AssertEqual(t, East.Rotate(90), South)
+	test.AssertEqual(t, East.Rotate(-90), North)
+	test.AssertEqual(t, East.Rotate(45), SouthEast)
+	test.AssertEqual(t, East.Rotate(-45), NorthEast)
 }
 func TestDirectionInverse(t *testing.T) {
 	// check standard compass directions
