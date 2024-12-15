@@ -130,3 +130,12 @@ func (p Point) Clone() Point {
 func DirectionBetween(a, b Point) Direction {
 	return Direction{b[0] - a[0], b[1] - a[1]}
 }
+
+func (m Maze) Print() {
+	for i := range m {
+		for j := range m[len(m)-1-i] {
+			print(string(m[len(m)-1-i][j]))
+		}
+		println()
+	}
+}
