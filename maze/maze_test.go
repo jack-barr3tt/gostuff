@@ -115,3 +115,36 @@ func TestPointClone(t *testing.T) {
 	test.AssertEqual(t, p[0], 1)
 	test.AssertEqual(t, clone[0], 3)
 }
+
+func TestMazeRotate(t *testing.T) {
+	maze := NewMaze(`######
+#   *#
+#    #
+#    #
+# L  #
+######`)
+
+	rotated := maze.Rotate(0)
+
+	test.AssertEqual(t, maze, rotated)
+
+	expected90 := NewMaze(`######
+#*   #
+#    #
+#   L#
+#    #
+######`)
+
+	rotated = maze.Rotate(90)
+	test.AssertEqual(t, rotated, expected90)
+
+	expected180 := NewMaze(`######
+#  L #
+#    #
+#    #
+#*   #
+######`)
+
+	rotated = maze.Rotate(180)
+	test.AssertEqual(t, rotated, expected180)
+}

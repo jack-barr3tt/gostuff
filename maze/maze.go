@@ -73,3 +73,27 @@ func (m Maze) Print() {
 	}
 	println(output)
 }
+
+func (m Maze) Rotate(deg int) Maze {
+	normalised := ((deg % 360) + 360) % 360
+	if normalised%90 != 0 {
+		panic("Can only rotate in 90 degree increments")
+	}
+	if len(m) != len(m[0]) {
+		panic("Can only rotate square mazes")
+	}
+
+	rotated := m.Clone()
+
+	for i := 0; i < normalised/90; i++ {
+		temp := rotated.Clone()
+		for y := range rotated {
+			for x := range rotated[y] {
+				temp[x][len(rotated)-1-y] = rotated[y][x]
+			}
+		}
+		rotated = temp
+	}
+
+	return rotated
+}
