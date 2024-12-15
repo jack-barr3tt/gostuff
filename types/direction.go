@@ -34,3 +34,7 @@ func (d Direction) Inverse() Direction {
 func (d Direction) Multiply(n int) Direction {
 	return Direction{d[0] * n, d[1] * n}
 }
+
+func (d Direction) Add(other Direction) Direction {
+	return Direction{d[0] + other[0], d[1] + other[1]}
+}

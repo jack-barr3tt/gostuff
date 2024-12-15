@@ -38,3 +38,14 @@ func TestDirectionMultiply(t *testing.T) {
 	// test ad-hoc directions
 	test.AssertEqual(t, Direction{1, -2}.Multiply(2), Direction{2, -4})
 }
+
+func TestDirectionAdd(t *testing.T) {
+	// check standard compass directions
+	test.AssertEqual(t, North.Add(East), NorthEast)
+	test.AssertEqual(t, East.Add(South), SouthEast)
+	test.AssertEqual(t, South.Add(West), SouthWest)
+	test.AssertEqual(t, West.Add(North), NorthWest)
+
+	// test ad-hoc directions
+	test.AssertEqual(t, Direction{1, -2}.Add(Direction{3, 4}), Direction{4, 2})
+}
