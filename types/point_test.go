@@ -21,3 +21,7 @@ func TestDirectionTo(t *testing.T) {
 	test.AssertEqual(t, Point{4, 6}.DirectionTo(Point{5, 4}), Direction{1, -2})
 	test.AssertEqual(t, Point{4, 6}.DirectionTo(Point{2, 5}), Direction{-2, -1})
 }
+
+func TestPointFromSlice(t *testing.T) {
+	test.AssertEqual(t, Point{1, 2}, PointFromSlice([]int{1, 2}))
+}

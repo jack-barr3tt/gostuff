@@ -13,3 +13,7 @@ func (p Point) Clone() Point {
 func (a Point) DirectionTo(b Point) Direction {
 	return Direction{b[0] - a[0], b[1] - a[1]}
 }
+
+func PointFromSlice(s []int) Point {
+	return Point{s[0], s[1]}
+}
