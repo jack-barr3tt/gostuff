@@ -172,4 +172,6 @@ M.M`)
 M.S`)
 
 	test.AssertEqual(t, maze.SubMazeAt(subMaze2, types.Point{0, 1}, []rune{'.'}), false)
+
+	test.AssertEqual(t, maze.SubMazeAt(subMaze2, types.Point{9, 9}, []rune{'.'}), false)
 }

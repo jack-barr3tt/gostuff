@@ -103,7 +103,12 @@ func (m Maze) SubMazeAt(m2 Maze, origin types.Point, ignore []rune) bool {
 	ignoreMap := slices.Frequency(ignore)
 	for i, row := range m2 {
 		for j, cell := range row {
-			if _, ok := ignoreMap[cell]; !ok && m.At(types.Point{j + origin[0], i + origin[1]}) != cell {
+			if _, ok := ignoreMap[cell]; ok {
+				continue
+			}
+
+			p, ok := m.Move(origin, types.North.Multiply(i).Add(types.East.Multiply(j)))
+			if !ok || m.At(p) != cell {
 				return false
 			}
 		}
