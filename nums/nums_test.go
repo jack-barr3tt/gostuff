@@ -63,3 +63,17 @@ func TestMax(t *testing.T) {
 
 	test.AssertEqual(t, Max(-1.0, -1.0), -1.0)
 }
+
+func TestRationalize(t *testing.T) {
+	n, d := Rationalize(0.5, 100)
+	test.AssertEqual(t, n, 1)
+	test.AssertEqual(t, d, 2)
+
+	n, d = Rationalize(3.045454545, 100)
+	test.AssertEqual(t, n, 67)
+	test.AssertEqual(t, d, 22)
+
+	n, d = Rationalize(0.3339863647, 100000)
+	test.AssertEqual(t, n, 4262)
+	test.AssertEqual(t, d, 12761)
+}

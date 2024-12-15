@@ -1,5 +1,7 @@
 package nums
 
+import "math"
+
 func Gcd(a, b int) int {
 	for b != 0 {
 		a, b = b, a%b
@@ -34,4 +36,18 @@ func Max[T ~int | ~float64 | ~int64 | ~float32](a, b T) T {
 		return a
 	}
 	return b
+}
+
+func Rationalize[T ~int | ~float64 | ~int64 | ~float32](n T, maxDenominator int) (int, int) {
+	a, b := int(n), 1
+	diff := float64(1 << 31)
+
+	for i := 1; i <= maxDenominator; i++ {
+		newA := int(math.Round(float64(n) * float64(i)))
+		if newDiff := Abs(float64(n) - float64(newA)/float64(i)); newDiff < diff {
+			a, b, diff = newA, i, newDiff
+		}
+	}
+
+	return a, b
 }
