@@ -106,4 +106,22 @@ func TestShortestPath(t *testing.T) {
 	})
 
 	test.AssertEqual(t, length2, -1)
+
+	// test case inspired by pearson edexcel a level decision mathematics 1 textbook ISBN 9781292183299 page 66
+
+	g3 := NewGraph([]string{"S","A","B","C","D","T"}, map[string][]Edge{
+		"S": {{Node: "A", Cost: 5}, {Node: "B", Cost: 6}, {Node: "C", Cost: 2}},
+		"A": {{Node: "S", Cost: 5}, {Node: "D", Cost: 4}},
+		"B": {{Node: "S", Cost: 6}, {Node: "D", Cost: 4}, {Node: "T", Cost: 8}, {Node: "C", Cost: 2}},
+		"C": {{Node: "S", Cost: 2}, {Node: "B", Cost: 2}, {Node: "T", Cost: 12}},
+		"D": {{Node: "A", Cost: 4}, {Node: "B", Cost: 4}, {Node: "T", Cost: 3}},
+		"T": {{Node: "B", Cost: 8}, {Node: "C", Cost: 12}, {Node: "D", Cost: 3}},
+	})
+
+	path, length := g3.ShortestPath("S", "T", func(n Node) int {
+		return 1
+	})
+
+	test.AssertEqual(t, path, []string{"S", "C", "B", "D", "T"})
+	test.AssertEqual(t, length, 11)
 }
