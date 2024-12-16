@@ -59,4 +59,11 @@ func TestIntersectAt(t *testing.T) {
 	test.AssertEqual(t, x, 80)
 	test.AssertEqual(t, y, 40)
 	test.AssertEqual(t, ok, true)
+
+	l6 := NewAXBYC(26, 67, 10000000012748)
+	l7 := NewAXBYC(66, 21, 10000000012176)
+	x, y, ok = l6.IntersectsAt(l7)
+	test.AssertEqual(t, x, 118679050709)
+	test.AssertEqual(t, y, 103199174542)
+	test.AssertEqual(t, ok, true)
 }
