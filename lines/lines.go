@@ -75,8 +75,6 @@ func (l Line) IntersectsAt(l2 Line) (float64, float64, bool) {
 	yn := l.cd*l2.cn*l.mn*l2.md - l.cn*l2.cd*l.md*l2.mn
 	yd := l.cd * l2.cd * (l.mn*l2.md - l.md*l2.mn)
 
-	println(xn, xd, yn, yd)
-
 	x := float64(xn) / float64(xd)
 	if xn%xd == 0 {
 		x = float64(xn / xd)
