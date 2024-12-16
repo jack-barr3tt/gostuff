@@ -17,6 +17,12 @@ func AssertEqual[A any](t *testing.T, actual A, expected A) {
 	}
 }
 
+func AssertNotEqual[A any](t *testing.T, actual A, expected A) {
+	if reflect.DeepEqual(expected, actual) {
+		t.Errorf("Expected not to equal %v, got %v", expected, actual)
+	}
+}
+
 func AssertCases[A, B any](t *testing.T, fn func(A) B, cases []Case[A, B]) {
 	for _, c := range cases {
 		fmt.Println(c.Input, c.Expected, fn(c.Input))

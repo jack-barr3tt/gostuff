@@ -29,3 +29,12 @@ func TestValues(t *testing.T) {
 		{Input: map[int]string{}, Expected: []string{}},
 	})
 }
+
+func TestClone(t *testing.T) {
+	m := map[string]int{"a": 1, "b": 2}
+	clone := Clone(m)
+	test.AssertEqual(t, clone, m)
+
+	m["c"] = 3
+	test.AssertNotEqual(t, clone, m)
+}

@@ -15,3 +15,11 @@ func Values[K comparable, V any](m map[K]V) []V {
 	}
 	return values
 }
+
+func Clone[K comparable, V any](m map[K]V) map[K]V {
+	clone := make(map[K]V)
+	for k, v := range m {
+		clone[k] = v
+	}
+	return clone
+}
