@@ -109,7 +109,7 @@ func TestShortestPath(t *testing.T) {
 
 	// test case inspired by pearson edexcel a level decision mathematics 1 textbook ISBN 9781292183299 page 66
 
-	g3 := NewGraph([]string{"S","A","B","C","D","T"}, map[string][]Edge{
+	g3 := NewGraph([]string{"S", "A", "B", "C", "D", "T"}, map[string][]Edge{
 		"S": {{Node: "A", Cost: 5}, {Node: "B", Cost: 6}, {Node: "C", Cost: 2}},
 		"A": {{Node: "S", Cost: 5}, {Node: "D", Cost: 4}},
 		"B": {{Node: "S", Cost: 6}, {Node: "D", Cost: 4}, {Node: "T", Cost: 8}, {Node: "C", Cost: 2}},
@@ -124,4 +124,21 @@ func TestShortestPath(t *testing.T) {
 
 	test.AssertEqual(t, path, []string{"S", "C", "B", "D", "T"})
 	test.AssertEqual(t, length, 11)
+}
+
+func TestAllShortestPaths(t *testing.T) {
+	g := NewGraph([]string{"A", "B", "C", "D", "E"}, map[string][]Edge{
+		"A": {{Node: "B", Cost: 1}, {Node: "C", Cost: 2}, {Node: "D", Cost: 1}},
+		"B": {{Node: "A", Cost: 1}, {Node: "E", Cost: 2}},
+		"C": {{Node: "A", Cost: 2}, {Node: "D", Cost: 1}, {Node: "E", Cost: 1}},
+		"D": {{Node: "A", Cost: 1}, {Node: "C", Cost: 1}, {Node: "E", Cost: 3}},
+		"E": {{Node: "B", Cost: 2}, {Node: "C", Cost: 1}, {Node: "D", Cost: 3}},
+	})
+
+	paths, length := g.AllShortestPaths("A", "E")
+
+	expected := [][]string{{"A", "B", "E"}, {"A", "C", "E"}, {"A", "D", "C", "E"}}
+
+	test.AssertEqual(t, length, 3)
+	test.AssertEqual(t, paths, expected)
 }

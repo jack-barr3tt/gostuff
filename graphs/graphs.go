@@ -2,8 +2,11 @@ package graphs
 
 import (
 	"container/heap"
+	"strings"
 
+	"github.com/jack-barr3tt/gostuff/maps"
 	"github.com/jack-barr3tt/gostuff/queue"
+	"github.com/jack-barr3tt/gostuff/slices"
 )
 
 type Edge struct {
@@ -130,4 +133,87 @@ func (g Graph) reconstructPath(cameFrom map[string]string, current string) ([]st
 	}
 
 	return totalPath, cost
+}
+
+// AllShortestPaths returns all shortest paths from start to goal
+func (g Graph) AllShortestPaths(start, goal string) ([][]string, int) {
+	pq := make(queue.PriorityQueue[string], 0)
+	heap.Init(&pq)
+	heap.Push(&pq, &queue.Item[string]{Value: start, Priority: 0})
+
+	cameFrom := make(map[string][]string)
+	costSoFar := make(map[string]int)
+	costSoFar[start] = 0
+
+	var allPaths [][]string
+	minCost := -1
+
+	for pq.Len() > 0 {
+		curr := heap.Pop(&pq).(*queue.Item[string]).Value
+		if curr == goal {
+			path, cost := g.reconstructAllPaths(cameFrom, goal)
+			if minCost == -1 {
+				minCost = cost
+			}
+			allPaths = append(allPaths, path...)
+			continue
+		}
+
+		currNode, _ := g.At(curr)
+		for _, edge := range currNode.Adj {
+			newCost := costSoFar[curr] + edge.Cost
+			if _, ok := costSoFar[edge.Node]; !ok || newCost <= costSoFar[edge.Node] {
+				if newCost < costSoFar[edge.Node] {
+					cameFrom[edge.Node] = nil
+				}
+				cameFrom[edge.Node] = append(cameFrom[edge.Node], curr)
+				costSoFar[edge.Node] = newCost
+				heap.Push(&pq, &queue.Item[string]{Value: edge.Node, Priority: newCost})
+			}
+		}
+	}
+
+	result := slices.Map(
+		func(v string) []string { return strings.Split(v, "$") },
+		maps.Keys(
+			slices.Frequency(
+				slices.Map(
+					func(path []string) string { return strings.Join(path, "$") },
+					allPaths,
+				),
+			),
+		),
+	)
+
+	return result, minCost
+}
+
+func (g Graph) reconstructAllPaths(cameFrom map[string][]string, current string) ([][]string, int) {
+	var allPaths [][]string
+	var dfs func(path []string, node string)
+	dfs = func(path []string, node string) {
+		if len(cameFrom[node]) == 0 {
+			allPaths = append(allPaths, append([]string{node}, path...))
+			return
+		}
+		for _, prev := range cameFrom[node] {
+			dfs(append([]string{node}, path...), prev)
+		}
+	}
+	dfs([]string{}, current)
+
+	cost := 0
+	if len(allPaths) > 0 {
+		for i := 0; i < len(allPaths[0])-1; i++ {
+			currNode, _ := g.At(allPaths[0][i])
+			for _, edge := range currNode.Adj {
+				if edge.Node == allPaths[0][i+1] {
+					cost += edge.Cost
+					break
+				}
+			}
+		}
+	}
+
+	return allPaths, cost
 }
