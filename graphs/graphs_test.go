@@ -21,7 +21,19 @@ func TestNewVirtualGraph(t *testing.T) {
 	test.AssertEqual(t, g.nodeIds[origin].Name, origin)
 }
 
-func TestVirtualAt(t *testing.T) {
+func TestNewGraph(t *testing.T) {
+	g := NewGraph([]string{"a", "b", "c"}, map[string][]Edge{
+		"a": {{Node: "b", Cost: 1}, {Node: "c", Cost: 2}},
+		"b": {{Node: "a", Cost: 1}, {Node: "c", Cost: 2}},
+		"c": {{Node: "a", Cost: 2}, {Node: "b", Cost: 2}},
+	})
+
+	test.AssertEqual(t, g.nodeIds["a"].Name, "a")
+	test.AssertEqual(t, g.nodeIds["b"].Name, "b")
+	test.AssertEqual(t, g.nodeIds["c"].Name, "c")
+}
+
+func TestAt(t *testing.T) {
 	origin := "a"
 
 	g := NewVirtualGraph(func(n *Node) []Edge {
@@ -42,9 +54,20 @@ func TestVirtualAt(t *testing.T) {
 	node, ok = g.At(origin + "b")
 	test.AssertEqual(t, node.Name, origin+"b")
 	test.AssertEqual(t, ok, true)
+
+	g = NewGraph([]string{"a", "b", "c"}, map[string][]Edge{
+		"a": {{Node: "b", Cost: 1}, {Node: "c", Cost: 2}},
+		"b": {{Node: "a", Cost: 1}, {Node: "c", Cost: 2}},
+		"c": {{Node: "a", Cost: 2}, {Node: "b", Cost: 2}},
+	})
+
+	a, ok := g.At("a")
+	test.AssertEqual(t, ok, true)
+	test.AssertEqual(t, a.Name, "a")
+	test.AssertEqual(t, len(a.Adj), 2)
 }
 
-func TestVirtualShortestPath(t *testing.T) {
+func TestShortestPath(t *testing.T) {
 	// test case inspired by advent of code 2024 day 13
 	g1 := NewVirtualGraph(func(n *Node) []Edge {
 		pos := stringstuff.GetNums(n.Name)

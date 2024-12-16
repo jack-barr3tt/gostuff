@@ -16,22 +16,34 @@ type Node struct {
 	Adj  []Edge
 }
 
-type VirtualGraph struct {
+type Graph struct {
 	nodeIds map[string]*Node
 	gen     func(n *Node) []Edge
 }
 
-func NewVirtualGraph(nodeGenerator func(n *Node) []Edge, origin string) VirtualGraph {
+func NewVirtualGraph(nodeGenerator func(n *Node) []Edge, origin string) Graph {
 	node := &Node{Name: origin}
 
 	nodeIds := make(map[string]*Node)
 	nodeIds[origin] = node
 
-	return VirtualGraph{nodeIds: nodeIds, gen: nodeGenerator}
+	return Graph{nodeIds: nodeIds, gen: nodeGenerator}
 }
 
-func (g VirtualGraph) At(name string) (*Node, bool) {
+func NewGraph(nodes []string, edges map[string][]Edge) Graph {
+	nodeIds := make(map[string]*Node)
+	for _, name := range nodes {
+		nodeIds[name] = &Node{Name: name, Adj: edges[name]}
+	}
+
+	return Graph{nodeIds: nodeIds}
+}
+
+func (g Graph) At(name string) (*Node, bool) {
 	n, ok := g.nodeIds[name]
+	if g.gen == nil {
+		return n, ok
+	}
 	if ok && len(n.Adj) == 0 {
 		n.Adj = g.gen(n)
 		for _, edge := range n.Adj {
@@ -46,7 +58,7 @@ func (g VirtualGraph) At(name string) (*Node, bool) {
 // ShortestPath returns the shortest path from source to target using the A* algorithm.
 // The heuristic function should return -1 if the node is not reachable.
 // The heuristic function should return lower values for nodes that are more favorable.
-func (g VirtualGraph) ShortestPath(source, target string, heuristic func(n Node) int) ([]string, int) {
+func (g Graph) ShortestPath(source, target string, heuristic func(n Node) int) ([]string, int) {
 	// check the source node exists
 	if _, ok := g.At(source); !ok {
 		return nil, -1
@@ -95,7 +107,7 @@ func (g VirtualGraph) ShortestPath(source, target string, heuristic func(n Node)
 	return nil, -1
 }
 
-func (g VirtualGraph) reconstructPath(cameFrom map[string]string, current string) ([]string, int) {
+func (g Graph) reconstructPath(cameFrom map[string]string, current string) ([]string, int) {
 	totalPath := []string{current}
 	ok := true
 	for {
