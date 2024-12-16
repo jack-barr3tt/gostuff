@@ -59,18 +59,13 @@ func (g Graph) At(name string) (*Node, bool) {
 // The heuristic function should return -1 if the node is not reachable.
 // The heuristic function should return lower values for nodes that are more favorable.
 func (g Graph) ShortestPath(source, target string, heuristic func(n Node) int) ([]string, int) {
-	// check the source node exists
 	if _, ok := g.At(source); !ok {
 		return nil, -1
 	}
 
-	// make the priority queue
 	pq := make(queue.PriorityQueue[string], 0)
 	heap.Init(&pq)
-
-	// add the source node to the queue
-	startItem := &queue.Item[string]{Value: source, Priority: 0}
-	heap.Push(&pq, startItem)
+	heap.Push(&pq, &queue.Item[string]{Value: source, Priority: 0})
 
 	cameFrom := make(map[string]string)
 	costSoFar := make(map[string]int)
@@ -85,17 +80,13 @@ func (g Graph) ShortestPath(source, target string, heuristic func(n Node) int) (
 			return g.reconstructPath(cameFrom, target)
 		}
 
-		// assume nodes in the queue are always valid so ignore the ok value
 		currNode, _ := g.At(curr)
-
 		for _, edge := range currNode.Adj {
 			newCost := costSoFar[curr] + edge.Cost
-
 			if _, ok := costSoFar[edge.Node]; (!ok || newCost < costSoFar[edge.Node]) && heuristic(*g.nodeIds[edge.Node]) != -1 {
 				cameFrom[edge.Node] = curr
 				costSoFar[edge.Node] = newCost
 				costRemaining[edge.Node] = newCost + heuristic(*g.nodeIds[edge.Node])
-
 				if !pq.Has(edge.Node) {
 					item := &queue.Item[string]{Value: edge.Node, Priority: costRemaining[edge.Node]}
 					heap.Push(&pq, item)
@@ -132,27 +123,31 @@ func (g Graph) reconstructPath(cameFrom map[string]string, current string) ([]st
 	return totalPath, cost
 }
 
-// AllShortestPaths returns all shortest paths from start to goal
-func (g Graph) AllShortestPaths(start, goal string) ([][]string, int) {
+// AllShortestPaths returns all shortest paths from start to goal.
+func (g Graph) AllShortestPaths(source, target string) ([][]string, int) {
+	if _, ok := g.At(source); !ok {
+		return nil, -1
+	}
+
 	pq := make(queue.PriorityQueue[string], 0)
 	heap.Init(&pq)
-	heap.Push(&pq, &queue.Item[string]{Value: start, Priority: 0})
+	heap.Push(&pq, &queue.Item[string]{Value: source, Priority: 0})
 
 	cameFrom := make(map[string][]string)
 	costSoFar := make(map[string]int)
-	costSoFar[start] = 0
+	costSoFar[source] = 0
 
 	var allPaths [][]string
 	minCost := -1
 
 	for pq.Len() > 0 {
 		curr := heap.Pop(&pq).(*queue.Item[string]).Value
-		if curr == goal {
+		if curr == target {
 			if minCost == -1 {
 				minCost = costSoFar[curr]
 			}
 			if costSoFar[curr] == minCost {
-				allPaths = append(allPaths, g.reconstructAllPaths(cameFrom, goal)...)
+				allPaths = append(allPaths, g.reconstructAllPaths(cameFrom, target)...)
 			}
 			continue
 		}
