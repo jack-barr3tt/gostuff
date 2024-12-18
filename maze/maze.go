@@ -21,6 +21,16 @@ func NewMaze(raw string) Maze {
 	return maze
 }
 
+func NewBlankMaze(width, height int) Maze {
+	maze := make([][]rune, height)
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			maze[y] = append(maze[y], '.')
+		}
+	}
+	return maze
+}
+
 func (m Maze) Move(p types.Point, d types.Direction) (types.Point, bool) {
 	newPos := types.Point{p[0] + d[0], p[1] + d[1]}
 

@@ -29,6 +29,27 @@ L######`
 	test.AssertEqual(t, NewMaze(raw), expected)
 }
 
+func TestNewBlankMaze(t *testing.T) {
+	g1 := NewBlankMaze(3, 3)
+
+	expected1 := Maze{
+		{'.', '.', '.'},
+		{'.', '.', '.'},
+		{'.', '.', '.'},
+	}
+
+	test.AssertEqual(t, g1, expected1)
+
+	g2 := NewBlankMaze(4, 2)
+
+	expected2 := Maze{
+		{'.', '.', '.', '.'},
+		{'.', '.', '.', '.'},
+	}
+
+	test.AssertEqual(t, g2, expected2)
+}
+
 func TestMove(t *testing.T) {
 	maze := NewMaze(`######
 #    #
