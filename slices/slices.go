@@ -269,7 +269,7 @@ func Repeat[A any](value A, count int) []A {
 	return out
 }
 
-func CountIf[A any](l []A, f func(v A) bool) int {
+func CountIf[A any](f func(v A) bool, l []A) int {
 	c := 0
 	for _, v := range l {
 		if f(v) {

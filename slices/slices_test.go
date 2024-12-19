@@ -334,16 +334,16 @@ func TestRepeat(t *testing.T) {
 
 func TestCountIf(t *testing.T) {
 	// test empty
-	test.AssertEqual(t, CountIf([]int{}, func(x int) bool { return x > 0 }), 0)
+	test.AssertEqual(t, CountIf(func(x int) bool { return x > 0 }, []int{}), 0)
 
 	// test no matches
-	test.AssertEqual(t, CountIf([]int{1, 2, 3}, func(x int) bool { return x < 0 }), 0)
+	test.AssertEqual(t, CountIf(func(x int) bool { return x < 0 }, []int{1, 2, 3}), 0)
 
 	// test 1 match
-	test.AssertEqual(t, CountIf([]int{1, 2, 3}, func(x int) bool { return x == 2 }), 1)
+	test.AssertEqual(t, CountIf(func(x int) bool { return x == 2 }, []int{1, 2, 3}), 1)
 
 	// test multiple matches
-	test.AssertEqual(t, CountIf([]int{1, 2, 3, 2, 2}, func(x int) bool { return x == 2 }), 3)
+	test.AssertEqual(t, CountIf(func(x int) bool { return x == 2 }, []int{1, 2, 3, 2, 2}), 3)
 }
 
 func TestSum(t *testing.T) {
