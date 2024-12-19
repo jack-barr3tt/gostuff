@@ -38,3 +38,20 @@ func TestClone(t *testing.T) {
 	m["c"] = 3
 	test.AssertNotEqual(t, clone, m)
 }
+
+func TestMap(t *testing.T) {
+	m := map[string]int{"a": 1, "b": 2}
+	result := Map(func(k string, v int) int { return v * 2 }, m)
+	test.AssertEqual(t, result, []int{2, 4})
+}
+
+func TestReduce(t *testing.T) {
+	m := map[string]int{"aa": 1, "babd": 2, "cd": 3}
+	result := Reduce(func(acc int, k string, v int) int {
+		if len(k) > acc {
+			return len(k)
+		}
+		return acc
+	}, m, 0)
+	test.AssertEqual(t, result, 4)
+}

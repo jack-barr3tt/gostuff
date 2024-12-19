@@ -23,3 +23,19 @@ func Clone[K comparable, V any](m map[K]V) map[K]V {
 	}
 	return clone
 }
+
+func Map[K comparable, MV any, RV any](f func(K, MV) RV, m map[K]MV) []RV {
+	result := []RV{}
+	for k, v := range m {
+		result = append(result, f(k, v))
+	}
+	return result
+}
+
+func Reduce[K comparable, V any, Acc any](f func(Acc, K, V) Acc, m map[K]V, initial Acc) Acc {
+	result := initial
+	for k, v := range m {
+		result = f(result, k, v)
+	}
+	return result
+}
