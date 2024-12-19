@@ -135,10 +135,24 @@ func TestAllShortestPaths(t *testing.T) {
 		"E": {{Node: "B", Cost: 2}, {Node: "C", Cost: 1}, {Node: "D", Cost: 3}},
 	})
 
-	paths, length := g.AllShortestPaths("A", "E")
+	paths, length := g.AllShortestPaths("A", "E", func(n Node) int { return 1 })
 
 	expected := [][]string{{"A", "B", "E"}, {"A", "C", "E"}, {"A", "D", "C", "E"}}
 
 	test.AssertEqual(t, length, 3)
 	test.AssertEqual(t, paths, expected)
+
+	// test getting all shortest paths while using a heuristic function that makes a node unreachable
+
+	pathsH, lengthH := g.AllShortestPaths("A", "E", func(n Node) int {
+		if n.Name == "B" {
+			return -1
+		}
+		return 1
+	})
+
+	expectedH := [][]string{{"A", "C", "E"}, {"A", "D", "C", "E"}}
+
+	test.AssertEqual(t, lengthH, 3)
+	test.AssertEqual(t, pathsH, expectedH)
 }

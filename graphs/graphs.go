@@ -2,8 +2,11 @@ package graphs
 
 import (
 	"container/heap"
+	"strings"
 
+	"github.com/jack-barr3tt/gostuff/maps"
 	"github.com/jack-barr3tt/gostuff/queue"
+	"github.com/jack-barr3tt/gostuff/slices"
 )
 
 type Edge struct {
@@ -124,7 +127,7 @@ func (g Graph) reconstructPath(cameFrom map[string]string, current string) ([]st
 }
 
 // AllShortestPaths returns all shortest paths from start to goal.
-func (g Graph) AllShortestPaths(source, target string) ([][]string, int) {
+func (g Graph) AllShortestPaths(source, target string, heuristic func(n Node) int) ([][]string, int) {
 	if _, ok := g.At(source); !ok {
 		return nil, -1
 	}
@@ -155,17 +158,23 @@ func (g Graph) AllShortestPaths(source, target string) ([][]string, int) {
 		currNode, _ := g.At(curr)
 		for _, edge := range currNode.Adj {
 			newCost := costSoFar[curr] + edge.Cost
-			if _, ok := costSoFar[edge.Node]; !ok || newCost < costSoFar[edge.Node] {
+			if _, ok := costSoFar[edge.Node]; (!ok || newCost < costSoFar[edge.Node]) && heuristic(*g.nodeIds[edge.Node]) != -1 {
 				cameFrom[edge.Node] = []string{curr}
 				costSoFar[edge.Node] = newCost
-				heap.Push(&pq, &queue.Item[string]{Value: edge.Node, Priority: newCost})
+				priority := newCost + heuristic(*g.nodeIds[edge.Node])
+				heap.Push(&pq, &queue.Item[string]{Value: edge.Node, Priority: priority})
 			} else if newCost == costSoFar[edge.Node] {
 				cameFrom[edge.Node] = append(cameFrom[edge.Node], curr)
 			}
 		}
 	}
 
-	return allPaths, minCost
+	allUniquePaths := make(map[string]bool)
+	for _, path := range allPaths {
+		allUniquePaths[strings.Join(path, "_")] = true
+	}
+
+	return slices.Map(func(v string) []string { return strings.Split(v, "_") }, maps.Keys(allUniquePaths)), minCost
 }
 
 func (g Graph) reconstructAllPaths(cameFrom map[string][]string, current string) [][]string {
