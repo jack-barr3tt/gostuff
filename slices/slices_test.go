@@ -331,3 +331,31 @@ func TestRepeat(t *testing.T) {
 	// test 5 times
 	test.AssertEqual(t, Repeat("a", 5), []string{"a", "a", "a", "a", "a"})
 }
+
+func TestCountIf(t *testing.T) {
+	// test empty
+	test.AssertEqual(t, CountIf([]int{}, func(x int) bool { return x > 0 }), 0)
+
+	// test no matches
+	test.AssertEqual(t, CountIf([]int{1, 2, 3}, func(x int) bool { return x < 0 }), 0)
+
+	// test 1 match
+	test.AssertEqual(t, CountIf([]int{1, 2, 3}, func(x int) bool { return x == 2 }), 1)
+
+	// test multiple matches
+	test.AssertEqual(t, CountIf([]int{1, 2, 3, 2, 2}, func(x int) bool { return x == 2 }), 3)
+}
+
+func TestSum(t *testing.T) {
+	// test empty
+	test.AssertEqual(t, Sum([]int{}), 0)
+
+	// test one element
+	test.AssertEqual(t, Sum([]int{1}), 1)
+
+	// test multiple elements
+	test.AssertEqual(t, Sum([]int{1, 2, 3}), 6)
+
+	// test float64
+	test.AssertEqual(t, Sum([]float64{1.1, 2.2, 3.3}), 6.6)
+}
