@@ -6,7 +6,7 @@ import (
 	"github.com/jack-barr3tt/gostuff/test"
 )
 
-func TestPointUnsafeMove(t *testing.T) {
+func TestUnsafeMove(t *testing.T) {
 	test.AssertEqual(t, Point{1, 2}.UnsafeMove(Direction{2, 3}), Point{3, 5})
 }
 

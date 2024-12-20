@@ -17,7 +17,7 @@ func TestRotate(t *testing.T) {
 	test.AssertEqual(t, East.Rotate(45), SouthEast)
 	test.AssertEqual(t, East.Rotate(-45), NorthEast)
 }
-func TestDirectionInverse(t *testing.T) {
+func TestInverse(t *testing.T) {
 	// check standard compass directions
 	test.AssertEqual(t, North.Inverse(), South)
 	test.AssertEqual(t, East.Inverse(), West)
@@ -28,7 +28,7 @@ func TestDirectionInverse(t *testing.T) {
 	test.AssertEqual(t, Direction{1, -2}.Inverse(), Direction{-1, 2})
 }
 
-func TestDirectionMultiply(t *testing.T) {
+func TestMultiply(t *testing.T) {
 	// check standard compass directions
 	test.AssertEqual(t, North.Multiply(2), Direction{0, 2})
 	test.AssertEqual(t, East.Multiply(3), Direction{3, 0})
@@ -39,7 +39,7 @@ func TestDirectionMultiply(t *testing.T) {
 	test.AssertEqual(t, Direction{1, -2}.Multiply(2), Direction{2, -4})
 }
 
-func TestDirectionAdd(t *testing.T) {
+func TestAdd(t *testing.T) {
 	// check standard compass directions
 	test.AssertEqual(t, North.Add(East), NorthEast)
 	test.AssertEqual(t, East.Add(South), SouthEast)
@@ -50,7 +50,7 @@ func TestDirectionAdd(t *testing.T) {
 	test.AssertEqual(t, Direction{1, -2}.Add(Direction{3, 4}), Direction{4, 2})
 }
 
-func TestDirectionManhattan(t *testing.T) {
+func TestManhattan(t *testing.T) {
 	test.AssertEqual(t, North.Manhattan(), 1)
 	test.AssertEqual(t, Direction{1, -2}.Manhattan(), 3)
 }
