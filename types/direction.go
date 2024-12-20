@@ -1,6 +1,10 @@
 package types
 
-import "math"
+import (
+	"math"
+
+	"github.com/jack-barr3tt/gostuff/nums"
+)
 
 type Direction [2]int
 
@@ -37,6 +41,10 @@ func (d Direction) Multiply(n int) Direction {
 
 func (d Direction) Add(other Direction) Direction {
 	return Direction{d[0] + other[0], d[1] + other[1]}
+}
+
+func (d Direction) Manhattan() int {
+	return nums.Abs(d[0]) + nums.Abs(d[1])
 }
 
 func DirFromSlice(s []int) Direction {

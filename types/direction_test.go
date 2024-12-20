@@ -50,6 +50,11 @@ func TestDirectionAdd(t *testing.T) {
 	test.AssertEqual(t, Direction{1, -2}.Add(Direction{3, 4}), Direction{4, 2})
 }
 
+func TestDirectionManhattan(t *testing.T) {
+	test.AssertEqual(t, North.Manhattan(), 1)
+	test.AssertEqual(t, Direction{1, -2}.Manhattan(), 3)
+}
+
 func TestDirFromSlice(t *testing.T) {
 	test.AssertEqual(t, Direction{1, 2}, DirFromSlice([]int{1, 2}))
 }
