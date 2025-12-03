@@ -54,3 +54,7 @@ func Rationalize[T ~int | ~float64 | ~int64 | ~float32](n T, maxDenominator int)
 
 	return a, b
 }
+
+func Pow(base, exp int) int {
+	return int(math.Pow(float64(base), float64(exp)))
+}

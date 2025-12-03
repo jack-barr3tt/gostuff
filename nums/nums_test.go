@@ -77,3 +77,9 @@ func TestRationalize(t *testing.T) {
 	test.AssertEqual(t, n, 4262)
 	test.AssertEqual(t, d, 12761)
 }
+
+func TestPow(t *testing.T) {
+	test.AssertEqual(t, Pow(2, 0), 1)
+	test.AssertEqual(t, Pow(2, 3), 8)
+	test.AssertEqual(t, Pow(5, 4), 625)
+}
