@@ -140,7 +140,7 @@ func TestAllShortestPaths(t *testing.T) {
 	expected := [][]string{{"A", "B", "E"}, {"A", "C", "E"}, {"A", "D", "C", "E"}}
 
 	test.AssertEqual(t, length, 3)
-	test.AssertEqual(t, paths, expected)
+	test.AssertSlicesEqual(t, paths, expected)
 
 	// test getting all shortest paths while using a heuristic function that makes a node unreachable
 
@@ -154,5 +154,5 @@ func TestAllShortestPaths(t *testing.T) {
 	expectedH := [][]string{{"A", "C", "E"}, {"A", "D", "C", "E"}}
 
 	test.AssertEqual(t, lengthH, 3)
-	test.AssertEqual(t, pathsH, expectedH)
+	test.AssertSlicesEqual(t, pathsH, expectedH)
 }

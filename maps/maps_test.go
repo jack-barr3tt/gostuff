@@ -7,27 +7,31 @@ import (
 )
 
 func TestKeys(t *testing.T) {
-	test.AssertCases(t, Keys[string, int], []test.Case[map[string]int, []string]{
-		{Input: map[string]int{"a": 1, "b": 2}, Expected: []string{"a", "b"}},
-		{Input: map[string]int{}, Expected: []string{}},
-	})
+	result1 := Keys(map[string]int{"a": 1, "b": 2})
+	test.AssertSlicesEqual(t, result1, []string{"a", "b"})
 
-	test.AssertCases(t, Keys[int, string], []test.Case[map[int]string, []int]{
-		{Input: map[int]string{1: "a", 2: "b"}, Expected: []int{1, 2}},
-		{Input: map[int]string{}, Expected: []int{}},
-	})
+	result2 := Keys(map[string]int{})
+	test.AssertEqual(t, result2, []string{})
+
+	result3 := Keys(map[int]string{1: "a", 2: "b"})
+	test.AssertSlicesEqual(t, result3, []int{1, 2})
+
+	result4 := Keys(map[int]string{})
+	test.AssertEqual(t, result4, []int{})
 }
 
 func TestValues(t *testing.T) {
-	test.AssertCases(t, Values[string, int], []test.Case[map[string]int, []int]{
-		{Input: map[string]int{"a": 1, "b": 2}, Expected: []int{1, 2}},
-		{Input: map[string]int{}, Expected: []int{}},
-	})
+	result1 := Values(map[string]int{"a": 1, "b": 2})
+	test.AssertSlicesEqual(t, result1, []int{1, 2})
 
-	test.AssertCases(t, Values[int, string], []test.Case[map[int]string, []string]{
-		{Input: map[int]string{1: "a", 2: "b"}, Expected: []string{"a", "b"}},
-		{Input: map[int]string{}, Expected: []string{}},
-	})
+	result2 := Values(map[string]int{})
+	test.AssertEqual(t, result2, []int{})
+
+	result3 := Values(map[int]string{1: "a", 2: "b"})
+	test.AssertSlicesEqual(t, result3, []string{"a", "b"})
+
+	result4 := Values(map[int]string{})
+	test.AssertEqual(t, result4, []string{})
 }
 
 func TestClone(t *testing.T) {
@@ -42,7 +46,7 @@ func TestClone(t *testing.T) {
 func TestMap(t *testing.T) {
 	m := map[string]int{"a": 1, "b": 2}
 	result := Map(func(k string, v int) int { return v * 2 }, m)
-	test.AssertEqual(t, result, []int{2, 4})
+	test.AssertSlicesEqual(t, result, []int{2, 4})
 }
 
 func TestReduce(t *testing.T) {
