@@ -64,3 +64,22 @@ func (a Range) SubtractRange(b Range) []Range {
 	// 🤯
 	panic("Unhandled case in Range.SubtractRange")
 }
+
+func (a Range) AddRange(b Range) *Range {
+	if a.End < b.Start-1 || b.End < a.Start-1 {
+		return nil
+	}
+
+	start := a.Start
+	if b.Start < start {
+		start = b.Start
+	}
+
+	end := a.End
+	if b.End > end {
+		end = b.End
+	}
+
+	result := Range{Start: start, End: end}
+	return &result
+}
