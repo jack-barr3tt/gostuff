@@ -2,8 +2,10 @@ package ranges
 
 import (
 	"cmp"
+	"regexp"
 	"slices"
 
+	"github.com/jack-barr3tt/gostuff/strings"
 	"github.com/jack-barr3tt/gostuff/types"
 )
 
@@ -28,4 +30,15 @@ func CombineRanges(ranges []types.Range) []types.Range {
 	combined = append(combined, current)
 
 	return combined
+}
+
+var rangeRegex = regexp.MustCompile(`^\s*(-?\d+)\s*-\s*(-?\d+)\s*$`)
+
+func ParseRange(s string) types.Range {
+	matches := rangeRegex.FindStringSubmatch(s)
+	if matches == nil {
+		panic("Invalid range string: " + s)
+	}
+
+	return types.Range{Start: strings.GetNum(matches[1]), End: strings.GetNum(matches[2])}
 }

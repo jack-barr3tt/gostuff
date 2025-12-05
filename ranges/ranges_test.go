@@ -48,3 +48,13 @@ func TestCombineRanges(t *testing.T) {
 
 	test.AssertCases(t, CombineRanges, cases)
 }
+
+func TestParseRange(t *testing.T) {
+	cases := []test.Case[string, types.Range]{
+		{Input: "1-10", Expected: types.Range{Start: 1, End: 10}},
+		{Input: "  -5 -  15 ", Expected: types.Range{Start: -5, End: 15}},
+		{Input: "0-0", Expected: types.Range{Start: 0, End: 0}},
+	}
+
+	test.AssertCases(t, ParseRange, cases)
+}
