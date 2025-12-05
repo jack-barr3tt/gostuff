@@ -132,3 +132,13 @@ func TestOverlapsRange(t *testing.T) {
 		{Input: OverlapsRangeInput{Range{Start: 6, End: 10}, Range{Start: 1, End: 5}}, Expected: false},
 	})
 }
+
+func TestWidth(t *testing.T) {
+	test.AssertCases(t, func(r Range) int {
+		return r.Width()
+	}, []test.Case[Range, int]{
+		{Input: Range{Start: 1, End: 10}, Expected: 10},
+		{Input: Range{Start: 5, End: 5}, Expected: 1},
+		{Input: Range{Start: -3, End: 3}, Expected: 7},
+	})
+}

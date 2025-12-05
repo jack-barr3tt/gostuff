@@ -79,3 +79,7 @@ func (a Range) AddRange(b Range) *Range {
 func (a Range) OverlapsRange(b Range) bool {
 	return a.Contains(b.Start) || a.Contains(b.End) || b.Contains(a.Start) || b.Contains(a.End)
 }
+
+func (r Range) Width() int {
+	return r.End - r.Start + 1
+}
