@@ -64,6 +64,30 @@ func TestMax(t *testing.T) {
 	test.AssertEqual(t, Max(-1.0, -1.0), -1.0)
 }
 
+func TestMin(t *testing.T) {
+	test.AssertEqual(t, Min(0, 0), 0)
+
+	test.AssertEqual(t, Min(1, 0), 0)
+
+	test.AssertEqual(t, Min(0, 1), 0)
+
+	test.AssertEqual(t, Min(-1, 0), -1)
+
+	test.AssertEqual(t, Min(0, -1), -1)
+
+	test.AssertEqual(t, Min(-1, -1), -1)
+
+	test.AssertEqual(t, Min(1.0, 0.0), 0.0)
+
+	test.AssertEqual(t, Min(0.0, 1.0), 0.0)
+
+	test.AssertEqual(t, Min(-1.0, 0.0), -1.0)
+
+	test.AssertEqual(t, Min(0.0, -1.0), -1.0)
+
+	test.AssertEqual(t, Min(-1.0, -1.0), -1.0)
+}
+
 func TestRationalize(t *testing.T) {
 	n, d := Rationalize(0.5, 100)
 	test.AssertEqual(t, n, 1)

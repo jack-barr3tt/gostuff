@@ -38,6 +38,13 @@ func Max[T ~int | ~float64 | ~int64 | ~float32](a, b T) T {
 	return b
 }
 
+func Min[T ~int | ~float64 | ~int64 | ~float32](a, b T) T {
+	if a < b {
+		return a
+	}
+	return b
+}
+
 func Rationalize[T ~int | ~float64 | ~int64 | ~float32](n T, maxDenominator int) (int, int) {
 	a, b := int(n), 1
 	diff := float64(1 << 31)
