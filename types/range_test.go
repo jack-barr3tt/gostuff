@@ -103,12 +103,32 @@ func TestAddRange(t *testing.T) {
 		return input.a.AddRange(input.b)
 	}, []test.Case[AddRangeInput, *Range]{
 		{Input: AddRangeInput{Range{Start: 1, End: 5}, Range{Start: 3, End: 8}}, Expected: &Range{Start: 1, End: 8}},
-		{Input: AddRangeInput{Range{Start: 1, End: 5}, Range{Start: 6, End: 10}}, Expected: &Range{Start: 1, End: 10}},
+		{Input: AddRangeInput{Range{Start: 1, End: 5}, Range{Start: 6, End: 10}}, Expected: nil},
 		{Input: AddRangeInput{Range{Start: 1, End: 5}, Range{Start: 7, End: 10}}, Expected: nil},
 		{Input: AddRangeInput{Range{Start: 1, End: 10}, Range{Start: 3, End: 7}}, Expected: &Range{Start: 1, End: 10}},
 		{Input: AddRangeInput{Range{Start: 5, End: 10}, Range{Start: 5, End: 10}}, Expected: &Range{Start: 5, End: 10}},
 		{Input: AddRangeInput{Range{Start: 5, End: 7}, Range{Start: 1, End: 10}}, Expected: &Range{Start: 1, End: 10}},
 		{Input: AddRangeInput{Range{Start: 1, End: 3}, Range{Start: 10, End: 15}}, Expected: nil},
-		{Input: AddRangeInput{Range{Start: 6, End: 10}, Range{Start: 1, End: 5}}, Expected: &Range{Start: 1, End: 10}},
+		{Input: AddRangeInput{Range{Start: 6, End: 10}, Range{Start: 1, End: 5}}, Expected: nil},
+	})
+}
+
+type OverlapsRangeInput struct {
+	a Range
+	b Range
+}
+
+func TestOverlapsRange(t *testing.T) {
+	test.AssertCases(t, func(input OverlapsRangeInput) bool {
+		return input.a.OverlapsRange(input.b)
+	}, []test.Case[OverlapsRangeInput, bool]{
+		{Input: OverlapsRangeInput{Range{Start: 1, End: 5}, Range{Start: 3, End: 8}}, Expected: true},
+		{Input: OverlapsRangeInput{Range{Start: 1, End: 5}, Range{Start: 6, End: 10}}, Expected: false},
+		{Input: OverlapsRangeInput{Range{Start: 1, End: 5}, Range{Start: 7, End: 10}}, Expected: false},
+		{Input: OverlapsRangeInput{Range{Start: 1, End: 10}, Range{Start: 3, End: 7}}, Expected: true},
+		{Input: OverlapsRangeInput{Range{Start: 5, End: 10}, Range{Start: 5, End: 10}}, Expected: true},
+		{Input: OverlapsRangeInput{Range{Start: 5, End: 7}, Range{Start: 1, End: 10}}, Expected: true},
+		{Input: OverlapsRangeInput{Range{Start: 1, End: 3}, Range{Start: 10, End: 15}}, Expected: false},
+		{Input: OverlapsRangeInput{Range{Start: 6, End: 10}, Range{Start: 1, End: 5}}, Expected: false},
 	})
 }

@@ -1,5 +1,7 @@
 package types
 
+import "github.com/jack-barr3tt/gostuff/nums"
+
 type Range struct {
 	Start int
 	End   int
@@ -66,20 +68,14 @@ func (a Range) SubtractRange(b Range) []Range {
 }
 
 func (a Range) AddRange(b Range) *Range {
-	if a.End < b.Start-1 || b.End < a.Start-1 {
+	if !a.OverlapsRange(b) {
 		return nil
 	}
 
-	start := a.Start
-	if b.Start < start {
-		start = b.Start
-	}
-
-	end := a.End
-	if b.End > end {
-		end = b.End
-	}
-
-	result := Range{Start: start, End: end}
+	result := Range{Start: nums.Min(a.Start, b.Start), End: nums.Max(a.End, b.End)}
 	return &result
+}
+
+func (a Range) OverlapsRange(b Range) bool {
+	return a.Contains(b.Start) || a.Contains(b.End) || b.Contains(a.Start) || b.Contains(a.End)
 }
