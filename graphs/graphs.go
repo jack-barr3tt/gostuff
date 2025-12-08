@@ -227,3 +227,11 @@ func (g Graph) DFT(start string, visit func(n Node)) {
 	dfs(startNode)
 }
 
+func (g Graph) Connected(start string) []string {
+	connected := map[string]bool{}
+	g.DFT(start, func(n Node) {
+		connected[n.Name] = true
+	})
+	return maps.Keys(connected)
+}
+
