@@ -212,3 +212,17 @@ func TestConnected(t *testing.T) {
 	test.AssertSlicesEqual(t, g.Connected("E"), []string{"D", "E"})
 }
 
+func TestSubgraphs(t *testing.T) {
+	g, _ := NewGraph([]string{"A", "B", "C", "D", "E"}, map[string][]Edge{
+		"A": {{Node: "B", Cost: 1}},
+		"B": {{Node: "C", Cost: 1}, {Node: "A", Cost: 1}},
+		"C": {{Node: "B", Cost: 1}},
+		"D": {{Node: "E", Cost: 1}},
+		"E": {{Node: "D", Cost: 1}},
+	})
+
+	subgraphs := g.Subgraphs()
+	expected := []string{"A", "D"}
+
+	test.AssertSlicesEqual(t, subgraphs, expected)
+}

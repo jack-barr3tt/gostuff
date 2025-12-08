@@ -235,3 +235,23 @@ func (g Graph) Connected(start string) []string {
 	return maps.Keys(connected)
 }
 
+func (g Graph) Subgraphs() []string {
+	visited := map[string]bool{}
+	for k, _ := range g.nodeIds {
+		visited[k] = false
+	}
+
+	starts := []string{}
+
+	for k, _ := range g.nodeIds {
+		if !visited[k] {
+			subgraphNodes := g.Connected(k)
+			for _, nodeName := range subgraphNodes {
+				visited[nodeName] = true
+			}
+			starts = append(starts, k)
+		}
+	}
+
+	return starts
+}
