@@ -2,6 +2,7 @@ package graphs
 
 import (
 	"container/heap"
+	"fmt"
 	"strings"
 
 	"github.com/jack-barr3tt/gostuff/maps"
@@ -33,13 +34,24 @@ func NewVirtualGraph(nodeGenerator func(n *Node) []Edge, origin string) Graph {
 	return Graph{nodeIds: nodeIds, gen: nodeGenerator}
 }
 
-func NewGraph(nodes []string, edges map[string][]Edge) Graph {
+func NewGraph(nodes []string, edges map[string][]Edge) (Graph, error) {
 	nodeIds := make(map[string]*Node)
 	for _, name := range nodes {
 		nodeIds[name] = &Node{Name: name, Adj: edges[name]}
 	}
 
-	return Graph{nodeIds: nodeIds}
+	for nodeName, nodeEdges := range edges {
+		if _, exists := nodeIds[nodeName]; !exists {
+			return Graph{}, fmt.Errorf("edges defined for non-existent node: %s", nodeName)
+		}
+		for _, edge := range nodeEdges {
+			if _, exists := nodeIds[edge.Node]; !exists {
+				return Graph{}, fmt.Errorf("edge from %s references non-existent node: %s", nodeName, edge.Node)
+			}
+		}
+	}
+
+	return Graph{nodeIds: nodeIds}, nil
 }
 
 func (g Graph) At(name string) (*Node, bool) {

@@ -22,15 +22,30 @@ func TestNewVirtualGraph(t *testing.T) {
 }
 
 func TestNewGraph(t *testing.T) {
-	g := NewGraph([]string{"a", "b", "c"}, map[string][]Edge{
+	// Test valid graph creation
+	g, err := NewGraph([]string{"a", "b", "c"}, map[string][]Edge{
 		"a": {{Node: "b", Cost: 1}, {Node: "c", Cost: 2}},
 		"b": {{Node: "a", Cost: 1}, {Node: "c", Cost: 2}},
 		"c": {{Node: "a", Cost: 2}, {Node: "b", Cost: 2}},
 	})
 
+	test.AssertEqual(t, err, nil)
 	test.AssertEqual(t, g.nodeIds["a"].Name, "a")
 	test.AssertEqual(t, g.nodeIds["b"].Name, "b")
 	test.AssertEqual(t, g.nodeIds["c"].Name, "c")
+
+	// Test error case: edges reference non-existent nodes
+	_, err = NewGraph([]string{"a", "b"}, map[string][]Edge{
+		"a": {{Node: "c", Cost: 1}},
+	})
+	test.AssertEqual(t, err != nil, true)
+
+	// Test error case: edges defined for non-existent node
+	_, err = NewGraph([]string{"a", "b"}, map[string][]Edge{
+		"a": {{Node: "b", Cost: 1}},
+		"c": {{Node: "a", Cost: 1}},
+	})
+	test.AssertEqual(t, err != nil, true)
 }
 
 func TestAt(t *testing.T) {
@@ -55,7 +70,7 @@ func TestAt(t *testing.T) {
 	test.AssertEqual(t, node.Name, origin+"b")
 	test.AssertEqual(t, ok, true)
 
-	g = NewGraph([]string{"a", "b", "c"}, map[string][]Edge{
+	g, _ = NewGraph([]string{"a", "b", "c"}, map[string][]Edge{
 		"a": {{Node: "b", Cost: 1}, {Node: "c", Cost: 2}},
 		"b": {{Node: "a", Cost: 1}, {Node: "c", Cost: 2}},
 		"c": {{Node: "a", Cost: 2}, {Node: "b", Cost: 2}},
@@ -109,7 +124,7 @@ func TestShortestPath(t *testing.T) {
 
 	// test case inspired by pearson edexcel a level decision mathematics 1 textbook ISBN 9781292183299 page 66
 
-	g3 := NewGraph([]string{"S", "A", "B", "C", "D", "T"}, map[string][]Edge{
+	g3, _ := NewGraph([]string{"S", "A", "B", "C", "D", "T"}, map[string][]Edge{
 		"S": {{Node: "A", Cost: 5}, {Node: "B", Cost: 6}, {Node: "C", Cost: 2}},
 		"A": {{Node: "S", Cost: 5}, {Node: "D", Cost: 4}},
 		"B": {{Node: "S", Cost: 6}, {Node: "D", Cost: 4}, {Node: "T", Cost: 8}, {Node: "C", Cost: 2}},
@@ -127,7 +142,7 @@ func TestShortestPath(t *testing.T) {
 }
 
 func TestAllShortestPaths(t *testing.T) {
-	g := NewGraph([]string{"A", "B", "C", "D", "E"}, map[string][]Edge{
+	g, _ := NewGraph([]string{"A", "B", "C", "D", "E"}, map[string][]Edge{
 		"A": {{Node: "B", Cost: 1}, {Node: "C", Cost: 2}, {Node: "D", Cost: 1}},
 		"B": {{Node: "A", Cost: 1}, {Node: "E", Cost: 2}},
 		"C": {{Node: "A", Cost: 2}, {Node: "D", Cost: 1}, {Node: "E", Cost: 1}},
