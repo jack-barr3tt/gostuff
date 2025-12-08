@@ -171,3 +171,28 @@ func TestAllShortestPaths(t *testing.T) {
 	test.AssertEqual(t, lengthH, 3)
 	test.AssertSlicesEqual(t, pathsH, expectedH)
 }
+
+func TestDFT(t *testing.T) {
+	g, _ := NewGraph([]string{"A", "B", "C", "D", "E"}, map[string][]Edge{
+		"A": {{Node: "B", Cost: 1}},
+		"B": {{Node: "C", Cost: 1}, {Node: "A", Cost: 1}},
+		"C": {{Node: "B", Cost: 1}},
+		"D": {{Node: "E", Cost: 1}},
+		"E": {{Node: "D", Cost: 1}},
+	})
+
+	visitedA := []string{}
+	g.DFT("A", func(n Node) {
+		visitedA = append(visitedA, n.Name)
+	})
+
+	test.AssertSlicesEqual(t, visitedA, []string{"A", "B", "C"})
+
+	visitedD := []string{}
+	g.DFT("D", func(n Node) {
+		visitedD = append(visitedD, n.Name)
+	})
+
+	test.AssertSlicesEqual(t, visitedD, []string{"D", "E"})
+}
+

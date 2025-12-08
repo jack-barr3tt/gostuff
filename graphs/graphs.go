@@ -205,3 +205,25 @@ func (g Graph) reconstructAllPaths(cameFrom map[string][]string, current string)
 
 	return paths
 }
+
+func (g Graph) DFT(start string, visit func(n Node)) {
+	visited := make(map[string]bool)
+	var dfs func(n *Node)
+	dfs = func(n *Node) {
+		if visited[n.Name] {
+			return
+		}
+		visited[n.Name] = true
+		visit(*n)
+		for _, edge := range n.Adj {
+			nextNode, _ := g.At(edge.Node)
+			dfs(nextNode)
+		}
+	}
+	startNode, ok := g.At(start)
+	if !ok {
+		return
+	}
+	dfs(startNode)
+}
+
