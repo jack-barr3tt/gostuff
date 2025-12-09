@@ -54,6 +54,12 @@ func NewGraph(nodes []string, edges map[string][]Edge) (Graph, error) {
 	return Graph{nodeIds: nodeIds}, nil
 }
 
+func (g Graph) AddNode(name string, edges []Edge) {
+	if _, exists := g.nodeIds[name]; !exists {
+		g.nodeIds[name] = &Node{Name: name, Adj: edges}
+	}
+}
+
 func (g Graph) At(name string) (*Node, bool) {
 	n, ok := g.nodeIds[name]
 	if g.gen == nil {

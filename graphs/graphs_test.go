@@ -48,6 +48,22 @@ func TestNewGraph(t *testing.T) {
 	test.AssertEqual(t, err != nil, true)
 }
 
+func TestAddNode(t *testing.T) {
+	g, _ := NewGraph([]string{"a", "b"}, map[string][]Edge{
+		"a": {{Node: "b", Cost: 1}},
+		"b": {{Node: "a", Cost: 1}},
+	})
+
+	g.AddNode("c", []Edge{{Node: "a", Cost: 2}})
+
+	nodeC, ok := g.At("c")
+	test.AssertEqual(t, ok, true)
+	test.AssertEqual(t, nodeC.Name, "c")
+	test.AssertEqual(t, len(nodeC.Adj), 1)
+	test.AssertEqual(t, nodeC.Adj[0].Node, "a")
+	test.AssertEqual(t, nodeC.Adj[0].Cost, 2)
+}
+
 func TestAt(t *testing.T) {
 	origin := "a"
 
