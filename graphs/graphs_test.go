@@ -48,6 +48,11 @@ func TestNewGraph(t *testing.T) {
 	test.AssertEqual(t, err != nil, true)
 }
 
+func TestNewEmptyGraph(t *testing.T) {
+	g := NewEmptyGraph()
+	test.AssertEqual(t, len(g.nodeIds), 0)
+}
+
 func TestAddNode(t *testing.T) {
 	g, _ := NewGraph([]string{"a", "b"}, map[string][]Edge{
 		"a": {{Node: "b", Cost: 1}},
