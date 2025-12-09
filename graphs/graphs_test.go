@@ -69,6 +69,25 @@ func TestAddNode(t *testing.T) {
 	test.AssertEqual(t, nodeC.Adj[0].Cost, 2)
 }
 
+func TestAddEdge(t *testing.T) {
+	g, _ := NewGraph([]string{"a", "b"}, map[string][]Edge{
+		"a": {},
+		"b": {},
+	})
+
+	err := g.AddEdge("a", "b", 3)
+	test.AssertEqual(t, err, nil)
+
+	nodeA, _ := g.At("a")
+	test.AssertEqual(t, len(nodeA.Adj), 1)
+	test.AssertEqual(t, nodeA.Adj[0].Node, "b")
+	test.AssertEqual(t, nodeA.Adj[0].Cost, 3)
+
+	// Test error case: adding edge between non-existent nodes
+	err = g.AddEdge("a", "c", 2)
+	test.AssertEqual(t, err != nil, true)
+}
+
 func TestAt(t *testing.T) {
 	origin := "a"
 

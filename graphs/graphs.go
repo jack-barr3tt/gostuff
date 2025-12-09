@@ -64,6 +64,18 @@ func (g Graph) AddNode(name string, edges []Edge) {
 	}
 }
 
+func (g Graph) AddEdge(from, to string, cost int) error {
+	fromNode, fromExists := g.nodeIds[from]
+	_, toExists := g.nodeIds[to]
+
+	if !fromExists || !toExists {
+		return fmt.Errorf("one or both nodes do not exist: %s, %s", from, to)
+	}
+
+	fromNode.Adj = append(fromNode.Adj, Edge{Node: to, Cost: cost})
+	return nil
+}
+
 func (g Graph) At(name string) (*Node, bool) {
 	n, ok := g.nodeIds[name]
 	if g.gen == nil {
