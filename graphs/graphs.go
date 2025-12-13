@@ -3,6 +3,7 @@ package graphs
 import (
 	"container/heap"
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/jack-barr3tt/gostuff/maps"
@@ -259,13 +260,16 @@ func (g Graph) Connected(start string) []string {
 
 func (g Graph) Subgraphs() []string {
 	visited := map[string]bool{}
-	for k, _ := range g.nodeIds {
+	nodeNames := maps.Keys(g.nodeIds)
+	sort.Strings(nodeNames)
+
+	for _, k := range nodeNames {
 		visited[k] = false
 	}
 
 	starts := []string{}
 
-	for k, _ := range g.nodeIds {
+	for _, k := range nodeNames {
 		if !visited[k] {
 			subgraphNodes := g.Connected(k)
 			for _, nodeName := range subgraphNodes {
