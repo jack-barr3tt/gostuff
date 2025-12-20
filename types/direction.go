@@ -47,6 +47,14 @@ func (d Direction) Manhattan() int {
 	return nums.Abs(d[0]) + nums.Abs(d[1])
 }
 
+func (d Direction) Magnitude() float64 {
+	return math.Sqrt(float64(d[0]*d[0] + d[1]*d[1]))
+}
+
+func (d Direction) Unit() Direction {
+	return Direction{d[0] / int(d.Magnitude()), d[1] / int(d.Magnitude())}
+}
+
 func DirFromSlice(s []int) Direction {
 	return Direction{s[0], s[1]}
 }

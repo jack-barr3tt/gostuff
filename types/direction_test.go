@@ -58,3 +58,13 @@ func TestManhattan(t *testing.T) {
 func TestDirFromSlice(t *testing.T) {
 	test.AssertEqual(t, Direction{1, 2}, DirFromSlice([]int{1, 2}))
 }
+
+func TestMagnitude(t *testing.T) {
+	test.AssertEqual(t, North.Magnitude(), 1.0)
+	test.AssertEqual(t, Direction{3, 4}.Magnitude(), 5.0)
+}
+
+func TestUnit(t *testing.T) {
+	test.AssertEqual(t, Direction{-5, 0}.Unit(), Direction{-1, 0})
+	test.AssertEqual(t, Direction{0, 2}.Unit(), Direction{0, 1})
+}
