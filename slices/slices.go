@@ -286,3 +286,31 @@ func Sum[T ~int | ~float64 | ~int64 | ~float32](l []T) T {
 	}
 	return sum
 }
+
+func Min[T ~int | ~float64 | ~int64 | ~float32](l []T) T {
+	if len(l) == 0 {
+		var zero T
+		return zero
+	}
+	min := l[0]
+	for _, v := range l {
+		if v < min {
+			min = v
+		}
+	}
+	return min
+}
+
+func Max[T ~int | ~float64 | ~int64 | ~float32](l []T) T {
+	if len(l) == 0 {
+		var zero T
+		return zero
+	}
+	max := l[0]
+	for _, v := range l {
+		if v > max {
+			max = v
+		}
+	}
+	return max
+}

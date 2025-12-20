@@ -359,3 +359,23 @@ func TestSum(t *testing.T) {
 	// test float64
 	test.AssertEqual(t, Sum([]float64{1.1, 2.2, 3.3}), 6.6)
 }
+
+func TestMin(t *testing.T) {
+	test.AssertEqual(t, Min([]int{}), 0)
+
+	test.AssertEqual(t, Min([]int{3}), 3)
+
+	test.AssertEqual(t, Min([]int{3, 1, 2}), 1)
+
+	test.AssertEqual(t, Min([]float64{3.3, 1.1, 2.2}), 1.1)
+}
+
+func TestMax(t *testing.T) {
+	test.AssertEqual(t, Max([]int{}), 0)
+
+	test.AssertEqual(t, Max([]int{3}), 3)
+
+	test.AssertEqual(t, Max([]int{3, 1, 2}), 3)
+
+	test.AssertEqual(t, Max([]float64{3.3, 1.1, 2.2}), 3.3)
+}
