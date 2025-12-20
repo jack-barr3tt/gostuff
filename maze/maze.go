@@ -7,9 +7,11 @@ import (
 	"github.com/jack-barr3tt/gostuff/types"
 )
 
-type Maze [][]rune
+type Maze[T comparable] [][]T
 
-func NewMaze(raw string) Maze {
+type RuneMaze Maze[rune]
+
+func NewMaze(raw string) Maze[rune] {
 	lines := strings.Split(raw, "\n")
 
 	maze := make([][]rune, len(lines))
@@ -21,17 +23,17 @@ func NewMaze(raw string) Maze {
 	return maze
 }
 
-func NewBlankMaze(width, height int) Maze {
-	maze := make([][]rune, height)
+func NewBlankMaze[T comparable](width, height int, empty T) Maze[T] {
+	maze := make([][]T, height)
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
-			maze[y] = append(maze[y], '.')
+			maze[y] = append(maze[y], empty)
 		}
 	}
 	return maze
 }
 
-func (m Maze) Move(p types.Point, d types.Direction) (types.Point, bool) {
+func (m Maze[T]) Move(p types.Point, d types.Direction) (types.Point, bool) {
 	newPos := types.Point{p[0] + d[0], p[1] + d[1]}
 
 	if newPos[1] < 0 || newPos[1] >= len(m) || newPos[0] < 0 || newPos[0] >= len(m[0]) {
@@ -41,11 +43,11 @@ func (m Maze) Move(p types.Point, d types.Direction) (types.Point, bool) {
 	return newPos, true
 }
 
-func (m Maze) At(p types.Point) rune {
+func (m Maze[T]) At(p types.Point) T {
 	return m[p[1]][p[0]]
 }
 
-func (m Maze) LocateAll(r rune) []types.Point {
+func (m Maze[T]) LocateAll(r T) []types.Point {
 	points := []types.Point{}
 
 	for i, row := range m {
@@ -59,22 +61,21 @@ func (m Maze) LocateAll(r rune) []types.Point {
 	return points
 }
 
-func (m Maze) Set(p types.Point, r rune) {
+func (m Maze[T]) Set(p types.Point, r T) {
 	m[p[1]][p[0]] = r
 }
 
-func (m Maze) Clone() Maze {
-	clone := make([][]rune, len(m))
-
+func (m Maze[T]) Clone() Maze[T] {
+	clone := make([][]T, len(m))
 	for i, row := range m {
-		clone[i] = make([]rune, len(row))
+		clone[i] = make([]T, len(row))
 		copy(clone[i], row)
 	}
 
 	return clone
 }
 
-func (m Maze) Print() {
+func (m RuneMaze) Print() {
 	output := ""
 	for i := range m {
 		for j := range m[len(m)-1-i] {
@@ -85,7 +86,7 @@ func (m Maze) Print() {
 	println(output)
 }
 
-func (m Maze) Rotate(deg int) Maze {
+func (m Maze[T]) Rotate(deg int) Maze[T] {
 	normalised := ((deg % 360) + 360) % 360
 	if normalised%90 != 0 {
 		panic("Can only rotate in 90 degree increments")
@@ -109,7 +110,7 @@ func (m Maze) Rotate(deg int) Maze {
 	return rotated
 }
 
-func (m Maze) SubMazeAt(m2 Maze, origin types.Point, ignore []rune) bool {
+func (m Maze[T]) SubMazeAt(m2 Maze[T], origin types.Point, ignore []T) bool {
 	ignoreMap := slices.Frequency(ignore)
 	for i, row := range m2 {
 		for j, cell := range row {

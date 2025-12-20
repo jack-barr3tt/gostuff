@@ -16,7 +16,7 @@ func TestNewMaze(t *testing.T) {
 #     #
 L######`
 
-	expected := Maze{
+	expected := Maze[rune]{
 		{'L', '#', '#', '#', '#', '#', '#'},
 		{'#', ' ', ' ', ' ', ' ', ' ', '#'},
 		{'#', ' ', '#', '#', '#', ' ', '#'},
@@ -30,9 +30,9 @@ L######`
 }
 
 func TestNewBlankMaze(t *testing.T) {
-	g1 := NewBlankMaze(3, 3)
+	g1 := NewBlankMaze(3, 3, '.')
 
-	expected1 := Maze{
+	expected1 := Maze[rune]{
 		{'.', '.', '.'},
 		{'.', '.', '.'},
 		{'.', '.', '.'},
@@ -40,9 +40,9 @@ func TestNewBlankMaze(t *testing.T) {
 
 	test.AssertEqual(t, g1, expected1)
 
-	g2 := NewBlankMaze(4, 2)
+	g2 := NewBlankMaze(4, 2, '.')
 
-	expected2 := Maze{
+	expected2 := Maze[rune]{
 		{'.', '.', '.', '.'},
 		{'.', '.', '.', '.'},
 	}
