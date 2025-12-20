@@ -53,6 +53,17 @@ func TestFindIndex(t *testing.T) {
 	test.AssertEqual(t, FindIndex(func(x int) bool { return x > 0 }, []int{-1, 0, -2}), -1)
 }
 
+func TestIndexOf(t *testing.T) {
+	// test empty
+	test.AssertEqual(t, IndexOf(1, []int{}), -1)
+
+	// test found
+	test.AssertEqual(t, IndexOf(2, []int{1, 2, 3}), 1)
+
+	// test not found
+	test.AssertEqual(t, IndexOf(4, []int{1, 2, 3}), -1)
+}
+
 func TestStrsToInts(t *testing.T) {
 	test.AssertEqual(t, StrsToInts([]string{"1", "2", "3"}), []int{1, 2, 3})
 

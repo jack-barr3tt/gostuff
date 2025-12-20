@@ -47,6 +47,10 @@ func FindIndex[I any](fn func(I) bool, l []I) int {
 	return -1
 }
 
+func IndexOf[A comparable](el A, l []A) int {
+	return FindIndex(func(v A) bool { return v == el }, l)
+}
+
 // Function to convert a slice of strings to a slice of ints
 func StrsToInts(l []string) []int {
 	return Map(func(s string) int {
