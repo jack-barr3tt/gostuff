@@ -127,3 +127,27 @@ func (m Maze[T]) SubMazeAt(m2 Maze[T], origin types.Point, ignore []T) bool {
 
 	return true
 }
+
+var nesw = []types.Direction{types.North, types.East, types.South, types.West}
+
+func (m Maze[T]) FloodFill(start types.Point, empty, fill T) {
+	queue := []types.Point{start}
+
+	for len(queue) > 0 {
+		current := queue[0]
+		queue = queue[1:]
+
+		if m.At(current) != empty {
+			continue
+		}
+
+		m.Set(current, fill)
+
+		for _, d := range nesw {
+			neighbor, ok := m.Move(current, d)
+			if ok && m.At(neighbor) == empty {
+				queue = append(queue, neighbor)
+			}
+		}
+	}
+}

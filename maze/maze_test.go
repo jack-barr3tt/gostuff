@@ -196,3 +196,23 @@ M.S`)
 
 	test.AssertEqual(t, maze.SubMazeAt(subMaze2, types.Point{9, 9}, []rune{'.'}), false)
 }
+
+func TestFloodFill(t *testing.T) {
+	maze := NewMaze(`######
+#    #
+# ## #
+# ## #
+#    #
+######`)
+
+	expected := NewMaze(`######
+#XXXX#
+#X##X#
+#X##X#
+#XXXX#
+######`)
+
+	maze.FloodFill(types.Point{1, 1}, ' ', 'X')
+
+	test.AssertEqual(t, maze, expected)
+}
