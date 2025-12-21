@@ -65,3 +65,7 @@ func Rationalize[T ~int | ~float64 | ~int64 | ~float32](n T, maxDenominator int)
 func Pow(base, exp int) int {
 	return int(math.Pow(float64(base), float64(exp)))
 }
+
+func IsInteger(x float64) bool {
+	return math.Abs(x-math.Round(x)) < 1e-6
+}

@@ -107,3 +107,32 @@ func TestPow(t *testing.T) {
 	test.AssertEqual(t, Pow(2, 3), 8)
 	test.AssertEqual(t, Pow(5, 4), 625)
 }
+
+func TestIsInteger(t *testing.T) {
+	// Exact integers
+	test.AssertEqual(t, IsInteger(0.0), true)
+	test.AssertEqual(t, IsInteger(1.0), true)
+	test.AssertEqual(t, IsInteger(-1.0), true)
+	test.AssertEqual(t, IsInteger(42.0), true)
+	test.AssertEqual(t, IsInteger(-100.0), true)
+
+	// Very close to integers
+	test.AssertEqual(t, IsInteger(1.0000001), true)
+	test.AssertEqual(t, IsInteger(0.9999999), true)
+	test.AssertEqual(t, IsInteger(5.0000005), true)
+	test.AssertEqual(t, IsInteger(4.9999995), true)
+
+	// Not integers
+	test.AssertEqual(t, IsInteger(0.5), false)
+	test.AssertEqual(t, IsInteger(1.5), false)
+	test.AssertEqual(t, IsInteger(-1.5), false)
+	test.AssertEqual(t, IsInteger(3.14159), false)
+	test.AssertEqual(t, IsInteger(0.1), false)
+	test.AssertEqual(t, IsInteger(42.001), false)
+
+	// Edge cases
+	test.AssertEqual(t, IsInteger(1.0+1e-7), true) 
+	test.AssertEqual(t, IsInteger(1.0-1e-7), true)
+	test.AssertEqual(t, IsInteger(1.0+1e-5), false)
+	test.AssertEqual(t, IsInteger(1.0-1e-5), false)
+}
