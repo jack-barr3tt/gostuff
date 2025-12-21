@@ -2,6 +2,9 @@ package lp
 
 import (
 	"math"
+	"sort"
+
+	slicestuff "github.com/jack-barr3tt/gostuff/slices"
 )
 
 type Constraint struct {
@@ -23,7 +26,7 @@ type Solution struct {
 	Vars    []float64
 }
 
-func (p *Problem) Solve() Solution {
+func (p *Problem) Solve(requireIntegers bool) Solution {
 	numVars := len(p.Objective)
 	tableau := buildTableau(p, numVars)
 
@@ -32,7 +35,13 @@ func (p *Problem) Solve() Solution {
 		return Solution{Optimal: false}
 	}
 
-	return extractSolution(tableau, numVars)
+	solution := extractSolution(tableau, numVars)
+
+	if requireIntegers {
+		solution = p.findIntegerSolution(solution)
+	}
+
+	return solution
 }
 
 func buildTableau(p *Problem, numVars int) [][]float64 {
@@ -159,4 +168,62 @@ func findBasicRow(tableau [][]float64, col int, numConstraints int) int {
 		}
 	}
 	return basicRow
+}
+
+func applyRounding(vals []float64, roundUp []bool) []float64 {
+	rounded := make([]float64, len(vals))
+	for i, v := range vals {
+		if roundUp[i] {
+			rounded[i] = math.Ceil(v)
+		} else {
+			rounded[i] = math.Floor(v)
+		}
+	}
+	return rounded
+}
+
+func calculateValue(p *Problem, vals []float64) float64 {
+	value := 0.0
+	for i, v := range vals {
+		value += float64(v) * p.Objective[i]
+	}
+	return value
+}
+
+func (p *Problem) isFeasible(vals []float64) bool {
+	for _, c := range p.Constraints {
+		sum := 0.0
+		for i, coeff := range c.Coefficients {
+			sum += coeff * vals[i]
+		}
+		if sum > c.Value+1e-10 {
+			return false
+		}
+	}
+	return true
+}
+
+func (p *Problem) findIntegerSolution(initial Solution) Solution {
+	numVars := len(p.Objective)
+
+	roundingCombos := slicestuff.NCombos([]bool{true, false}, numVars)
+	sort.Slice(roundingCombos, func(a, b int) bool {
+		aCoeffs, bCoeffs := applyRounding(initial.Vars, roundingCombos[a]), applyRounding(initial.Vars, roundingCombos[b])
+
+		return calculateValue(p, aCoeffs) > calculateValue(p, bCoeffs)
+	})
+	roundingCombos = slicestuff.Filter(func(combo []bool) bool {
+		newVars := applyRounding(initial.Vars, combo)
+		return p.isFeasible(newVars)
+	}, roundingCombos)
+
+	newVars := applyRounding(initial.Vars, roundingCombos[0])
+
+	solution := Solution{
+		Optimal: true,
+		Vars:    newVars,
+		Value:   calculateValue(p, newVars),
+	}
+
+	return solution
 }

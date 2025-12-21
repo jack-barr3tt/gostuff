@@ -27,7 +27,36 @@ func TestSimplex(t *testing.T) {
 	expectedY := 80.0 / 11.0
 	expectedP := 26.0
 
-	solution := problem.Solve()
+	solution := problem.Solve(false)
+
+	test.AssertEqual(t, solution.Optimal, true)
+	test.AssertEqual(t, solution.Vars[0], expectedX)
+	test.AssertEqual(t, solution.Vars[1], expectedY)
+	test.AssertEqual(t, solution.Value, expectedP)
+}
+
+func TestIntegerProgramming(t *testing.T) {
+	// Maximize P = 3x + 2y
+	// Subject to:
+	// 5x + 7y <= 70
+	// 10x + 3y <= 60
+	// x, y >= 0
+	// x, y are integers
+	// Expected: P = 24, x = 4, y = 6
+
+	problem := Problem{
+		Objective: []float64{3, 2},
+		Constraints: []Constraint{
+			{Coefficients: []float64{5, 7}, Value: 70},
+			{Coefficients: []float64{10, 3}, Value: 60},
+		},
+	}
+
+	expectedX := 3.0
+	expectedY := 7.0
+	expectedP := 23.0
+
+	solution := problem.Solve(true)
 
 	test.AssertEqual(t, solution.Optimal, true)
 	test.AssertEqual(t, solution.Vars[0], expectedX)
