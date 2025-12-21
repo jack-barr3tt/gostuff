@@ -26,7 +26,15 @@ type Solution struct {
 	Vars    []float64
 }
 
-func (p *Problem) Solve(requireIntegers bool) Solution {
+func (p *Problem) Solve(requireIntegers bool, minimize bool) Solution {
+	originalObjective := make([]float64, len(p.Objective))
+	copy(originalObjective, p.Objective)
+
+	// For minimization, negate the objective function
+	if minimize {
+		p.Objective = slicestuff.Map(func(v float64) float64 { return -v }, p.Objective)
+	}
+
 	numVars := len(p.Objective)
 	tableau := buildTableau(p, numVars)
 
@@ -39,6 +47,12 @@ func (p *Problem) Solve(requireIntegers bool) Solution {
 
 	if requireIntegers {
 		solution = p.findIntegerSolution(solution)
+	}
+
+	// Restore original objective and negate solution value if minimizing
+	p.Objective = originalObjective
+	if minimize {
+		solution.Value = -solution.Value
 	}
 
 	return solution
