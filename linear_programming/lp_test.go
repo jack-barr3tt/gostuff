@@ -104,4 +104,28 @@ func TestSimplex(t *testing.T) {
 	test.AssertEqual(t, solution4.Vars[1], 12.0)
 	test.AssertEqual(t, solution4.Vars[2], 0.0)
 	test.AssertEqual(t, solution4.Value, -8.0)
+
+	// Minimize P = a + b + c + d + e + f
+	// Subject to:
+	// e + f = 3
+	// b + f = 5
+	// c + d + e = 4
+	// a + b + d = 7
+	// a, b, c, d, e, f >= 0
+	// Expected: P = 10
+
+	problem5 := Problem{
+		Objective: []float64{1, 1, 1, 1, 1, 1},
+		Constraints: []Constraint{
+			{Coefficients: []float64{0, 0, 0, 0, 1, 1}, Value: 3, Type: EQ},
+			{Coefficients: []float64{0, 1, 0, 0, 0, 1}, Value: 5, Type: EQ},
+			{Coefficients: []float64{0, 0, 1, 1, 1, 0}, Value: 4, Type: EQ},
+			{Coefficients: []float64{1, 1, 0, 1, 0, 0}, Value: 7, Type: EQ},
+		},
+	}
+
+	solution5 := problem5.Solve(false, true)
+
+	test.AssertEqual(t, solution5.Optimal, true)
+	test.AssertEqual(t, solution5.Value, 10.0)
 }

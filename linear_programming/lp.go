@@ -14,6 +14,7 @@ var M = 1e6 // Large penalty value
 const (
 	LE ConstraintType = "<="
 	GE ConstraintType = ">="
+	EQ ConstraintType = "="
 )
 
 type Constraint struct {
@@ -70,11 +71,13 @@ func (p *Problem) Solve(requireIntegers bool, minimize bool) Solution {
 
 func buildTableau(p *Problem, numVars int) [][]float64 {
 	numConstraints := len(p.Constraints)
-	numArtificial := slicestuff.CountIf(func(c Constraint) bool { return c.Type == GE }, p.Constraints)
-	numCols := numVars + numConstraints + numArtificial + 1
+	numArtificial := slicestuff.CountIf(func(c Constraint) bool { return c.Type == GE || c.Type == EQ }, p.Constraints)
+	numSlackSurplus := slicestuff.CountIf(func(c Constraint) bool { return c.Type != EQ }, p.Constraints)
+	numCols := numVars + numSlackSurplus + numArtificial + 1
 
 	tableau := make([][]float64, numConstraints+1)
 
+	slackIdx := 0
 	artificialIdx := 0
 	for i, c := range p.Constraints {
 		tableau[i] = make([]float64, numCols)
@@ -82,12 +85,18 @@ func buildTableau(p *Problem, numVars int) [][]float64 {
 
 		if c.Type == GE {
 			// For >= subtract surplus variable, add artificial variable
-			tableau[i][numVars+i] = -1                           // surplus variable
-			tableau[i][numVars+numConstraints+artificialIdx] = 1 // artificial variable
+			tableau[i][numVars+slackIdx] = -1                     // surplus variable
+			tableau[i][numVars+numSlackSurplus+artificialIdx] = 1 // artificial variable
+			slackIdx++
+			artificialIdx++
+		} else if c.Type == EQ {
+			// For = only add artificial variable (no slack/surplus)
+			tableau[i][numVars+numSlackSurplus+artificialIdx] = 1 // artificial variable
 			artificialIdx++
 		} else {
 			// For <= add slack variable
-			tableau[i][numVars+i] = 1
+			tableau[i][numVars+slackIdx] = 1
+			slackIdx++
 		}
 
 		tableau[i][numCols-1] = c.Value
@@ -100,8 +109,8 @@ func buildTableau(p *Problem, numVars int) [][]float64 {
 
 	artificialIdx = 0
 	for i, c := range p.Constraints {
-		if c.Type == GE {
-			artCol := numVars + numConstraints + artificialIdx
+		if c.Type == GE || c.Type == EQ {
+			artCol := numVars + numSlackSurplus + artificialIdx
 			tableau[numConstraints][artCol] = M
 
 			for j := 0; j < numCols; j++ {
