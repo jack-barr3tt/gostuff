@@ -128,4 +128,28 @@ func TestSimplex(t *testing.T) {
 
 	test.AssertEqual(t, solution5.Optimal, true)
 	test.AssertEqual(t, solution5.Value, 10.0)
+
+	// Minimize P = sum of all 10 variables
+	// Subject to 10 equality constraints with 10 variables
+	// From Advent of Code 2025, Day 10, Part 2, my actual problem input
+	problem6 := Problem{
+		Objective: []float64{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		Constraints: []Constraint{
+			{Coefficients: []float64{1, 0, 1, 0, 0, 1, 1, 0, 1, 0}, Value: 60, Type: EQ},
+			{Coefficients: []float64{1, 0, 1, 0, 0, 1, 1, 0, 1, 1}, Value: 69, Type: EQ},
+			{Coefficients: []float64{1, 0, 1, 1, 0, 1, 0, 1, 1, 1}, Value: 66, Type: EQ},
+			{Coefficients: []float64{0, 1, 0, 0, 0, 0, 0, 0, 1, 0}, Value: 12, Type: EQ},
+			{Coefficients: []float64{1, 0, 0, 0, 1, 0, 1, 1, 1, 1}, Value: 74, Type: EQ},
+			{Coefficients: []float64{1, 1, 0, 0, 0, 1, 0, 1, 0, 1}, Value: 41, Type: EQ},
+			{Coefficients: []float64{1, 1, 1, 0, 1, 1, 0, 0, 1, 1}, Value: 76, Type: EQ},
+			{Coefficients: []float64{0, 1, 1, 0, 1, 0, 1, 0, 1, 0}, Value: 59, Type: EQ},
+			{Coefficients: []float64{1, 1, 1, 1, 0, 1, 1, 0, 1, 0}, Value: 77, Type: EQ},
+			{Coefficients: []float64{1, 0, 1, 0, 1, 1, 1, 0, 0, 1}, Value: 81, Type: EQ},
+		},
+	}
+
+	solution6 := problem6.Solve(true, true)
+
+	test.AssertEqual(t, solution6.Optimal, true)
+	test.AssertEqual(t, solution6.Value, 107.0)
 }

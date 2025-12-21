@@ -256,8 +256,20 @@ func (p *Problem) isFeasible(vals []float64) bool {
 		for i, coeff := range c.Coefficients {
 			sum += coeff * vals[i]
 		}
-		if sum > c.Value+1e-10 {
-			return false
+
+		switch c.Type {
+		case LE:
+			if sum > c.Value+1e-10 {
+				return false
+			}
+		case GE:
+			if sum < c.Value-1e-10 {
+				return false
+			}
+		case EQ:
+			if math.Abs(sum-c.Value) > 1e-10 {
+				return false
+			}
 		}
 	}
 	return true
