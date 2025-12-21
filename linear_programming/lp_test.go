@@ -18,8 +18,8 @@ func TestSimplex(t *testing.T) {
 	problem1 := Problem{
 		Objective: []float64{3, 2},
 		Constraints: []Constraint{
-			{Coefficients: []float64{5, 7}, Value: 70},
-			{Coefficients: []float64{10, 3}, Value: 60},
+			{Coefficients: []float64{5, 7}, Value: 70, Type: LE},
+			{Coefficients: []float64{10, 3}, Value: 60, Type: LE},
 		},
 	}
 
@@ -41,8 +41,8 @@ func TestSimplex(t *testing.T) {
 	problem2 := Problem{
 		Objective: []float64{3, 2},
 		Constraints: []Constraint{
-			{Coefficients: []float64{5, 7}, Value: 70},
-			{Coefficients: []float64{10, 3}, Value: 60},
+			{Coefficients: []float64{5, 7}, Value: 70, Type: LE},
+			{Coefficients: []float64{10, 3}, Value: 60, Type: LE},
 		},
 	}
 
@@ -65,10 +65,10 @@ func TestSimplex(t *testing.T) {
 	problem3 := Problem{
 		Objective: []float64{3, 6, -32},
 		Constraints: []Constraint{
-			{Coefficients: []float64{1, 6, 24}, Value: 672},
-			{Coefficients: []float64{3, 1, 24}, Value: 336},
-			{Coefficients: []float64{1, 3, 16}, Value: 168},
-			{Coefficients: []float64{2, 3, 32}, Value: 352},
+			{Coefficients: []float64{1, 6, 24}, Value: 672, Type: LE},
+			{Coefficients: []float64{3, 1, 24}, Value: 336, Type: LE},
+			{Coefficients: []float64{1, 3, 16}, Value: 168, Type: LE},
+			{Coefficients: []float64{2, 3, 32}, Value: 352, Type: LE},
 		},
 	}
 
@@ -79,4 +79,29 @@ func TestSimplex(t *testing.T) {
 	test.AssertEqual(t, solution3.Vars[1], 0.0)
 	test.AssertEqual(t, solution3.Vars[2], 21.0/2.0)
 	test.AssertEqual(t, solution3.Value, -336.0)
+
+	// Minimize P = x - y + z
+	// Subject to:
+	// 2x + y + z <= 20
+	// x - 2y - z <= 7
+	// x >= 4
+	// x, y, z >= 0
+	// Expected: P = -8, x = 4, y = 12, z = 0
+
+	problem4 := Problem{
+		Objective: []float64{1, -1, 1},
+		Constraints: []Constraint{
+			{Coefficients: []float64{2, 1, 1}, Value: 20, Type: LE},
+			{Coefficients: []float64{1, -2, -1}, Value: 7, Type: LE},
+			{Coefficients: []float64{1, 0, 0}, Value: 4, Type: GE},
+		},
+	}
+
+	solution4 := problem4.Solve(false, true)
+
+	test.AssertEqual(t, solution4.Optimal, true)
+	test.AssertEqual(t, solution4.Vars[0], 4.0)
+	test.AssertEqual(t, solution4.Vars[1], 12.0)
+	test.AssertEqual(t, solution4.Vars[2], 0.0)
+	test.AssertEqual(t, solution4.Value, -8.0)
 }

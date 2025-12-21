@@ -7,9 +7,19 @@ import (
 	slicestuff "github.com/jack-barr3tt/gostuff/slices"
 )
 
+type ConstraintType string
+
+var M = 1e6 // Large penalty value
+
+const (
+	LE ConstraintType = "<="
+	GE ConstraintType = ">="
+)
+
 type Constraint struct {
 	Coefficients []float64 // LHS
 	Value        float64   // RHS
+	Type         ConstraintType
 }
 
 // Problem represents a linear programming problem in standard form
@@ -60,19 +70,46 @@ func (p *Problem) Solve(requireIntegers bool, minimize bool) Solution {
 
 func buildTableau(p *Problem, numVars int) [][]float64 {
 	numConstraints := len(p.Constraints)
-	numCols := numVars + numConstraints + 1 // vars + slacks + RHS
+	numArtificial := slicestuff.CountIf(func(c Constraint) bool { return c.Type == GE }, p.Constraints)
+	numCols := numVars + numConstraints + numArtificial + 1
 
 	tableau := make([][]float64, numConstraints+1)
+
+	artificialIdx := 0
 	for i, c := range p.Constraints {
 		tableau[i] = make([]float64, numCols)
 		copy(tableau[i], c.Coefficients)
-		tableau[i][numVars+i] = 1       // slack variable
-		tableau[i][numCols-1] = c.Value // RHS
+
+		if c.Type == GE {
+			// For >= subtract surplus variable, add artificial variable
+			tableau[i][numVars+i] = -1                           // surplus variable
+			tableau[i][numVars+numConstraints+artificialIdx] = 1 // artificial variable
+			artificialIdx++
+		} else {
+			// For <= add slack variable
+			tableau[i][numVars+i] = 1
+		}
+
+		tableau[i][numCols-1] = c.Value
 	}
 
 	tableau[numConstraints] = make([]float64, numCols)
 	for j, coeff := range p.Objective {
 		tableau[numConstraints][j] = -coeff
+	}
+
+	artificialIdx = 0
+	for i, c := range p.Constraints {
+		if c.Type == GE {
+			artCol := numVars + numConstraints + artificialIdx
+			tableau[numConstraints][artCol] = M
+
+			for j := 0; j < numCols; j++ {
+				tableau[numConstraints][j] -= M * tableau[i][j]
+			}
+
+			artificialIdx++
+		}
 	}
 
 	return tableau
