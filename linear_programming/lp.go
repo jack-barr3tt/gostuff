@@ -2,8 +2,8 @@ package lp
 
 import (
 	"math"
-	"sort"
 
+	"github.com/jack-barr3tt/gostuff/nums"
 	slicestuff "github.com/jack-barr3tt/gostuff/slices"
 )
 
@@ -55,6 +55,10 @@ func (p *Problem) Solve(requireIntegers bool, minimize bool) Solution {
 	}
 
 	solution := extractSolution(tableau, numVars)
+
+	if !solution.Optimal {
+		return solution
+	}
 
 	if requireIntegers {
 		solution = p.findIntegerSolution(solution)
@@ -230,72 +234,123 @@ func findBasicRow(tableau [][]float64, col int, numConstraints int) int {
 	return basicRow
 }
 
-func applyRounding(vals []float64, roundUp []bool) []float64 {
-	rounded := make([]float64, len(vals))
-	for i, v := range vals {
-		if roundUp[i] {
-			rounded[i] = math.Ceil(v)
-		} else {
-			rounded[i] = math.Floor(v)
-		}
-	}
-	return rounded
-}
-
-func calculateValue(p *Problem, vals []float64) float64 {
-	value := 0.0
-	for i, v := range vals {
-		value += float64(v) * p.Objective[i]
-	}
-	return value
-}
-
-func (p *Problem) isFeasible(vals []float64) bool {
-	for _, c := range p.Constraints {
-		sum := 0.0
-		for i, coeff := range c.Coefficients {
-			sum += coeff * vals[i]
-		}
-
-		switch c.Type {
-		case LE:
-			if sum > c.Value+1e-10 {
-				return false
-			}
-		case GE:
-			if sum < c.Value-1e-10 {
-				return false
-			}
-		case EQ:
-			if math.Abs(sum-c.Value) > 1e-10 {
-				return false
-			}
-		}
-	}
-	return true
+func allIntegers(vals []float64) bool {
+	return !slicestuff.Some(func(v float64) bool { return !nums.IsInteger(v) }, vals)
 }
 
 func (p *Problem) findIntegerSolution(initial Solution) Solution {
-	numVars := len(p.Objective)
-
-	roundingCombos := slicestuff.NCombos([]bool{true, false}, numVars)
-	sort.Slice(roundingCombos, func(a, b int) bool {
-		aCoeffs, bCoeffs := applyRounding(initial.Vars, roundingCombos[a]), applyRounding(initial.Vars, roundingCombos[b])
-
-		return calculateValue(p, aCoeffs) > calculateValue(p, bCoeffs)
-	})
-	roundingCombos = slicestuff.Filter(func(combo []bool) bool {
-		newVars := applyRounding(initial.Vars, combo)
-		return p.isFeasible(newVars)
-	}, roundingCombos)
-
-	newVars := applyRounding(initial.Vars, roundingCombos[0])
-
-	solution := Solution{
-		Optimal: true,
-		Vars:    newVars,
-		Value:   calculateValue(p, newVars),
+	// If already all integers, recalculate value and return
+	if allIntegers(initial.Vars) {
+		return roundAndRecalculate(initial, p.Objective)
 	}
 
-	return solution
+	// Branch and bound
+	type node struct {
+		problem *Problem
+		depth   int
+	}
+
+	var bestSolution *Solution
+	queue := []node{{problem: p, depth: 0}}
+	maxDepth := 1000
+
+	for len(queue) > 0 {
+		current := queue[0]
+		queue = queue[1:]
+
+		if current.depth > maxDepth {
+			continue
+		}
+
+		sol := current.problem.solveContinuous()
+		if !sol.Optimal {
+			continue
+		}
+
+		if bestSolution != nil && sol.Value <= bestSolution.Value {
+			continue
+		}
+
+		if allIntegers(sol.Vars) {
+			sol = roundAndRecalculate(sol, current.problem.Objective)
+			if bestSolution == nil || sol.Value > bestSolution.Value {
+				bestSolution = &sol
+			}
+			continue
+		}
+
+		// Find first fractional variable to branch on
+		branchVar := slicestuff.FindIndex(func(v float64) bool { return !nums.IsInteger(v) }, sol.Vars)
+
+		if branchVar == -1 {
+			continue
+		}
+
+		// Branch 1: x_i <= floor(x_i)
+		branch1 := current.problem.Clone()
+		branch1.Constraints = append(branch1.Constraints, makeVariableConstraint(branchVar, len(p.Objective), math.Floor(sol.Vars[branchVar]), LE))
+
+		// Branch 2: x_i >= ceil(x_i)
+		branch2 := current.problem.Clone()
+		branch2.Constraints = append(branch2.Constraints, makeVariableConstraint(branchVar, len(p.Objective), math.Ceil(sol.Vars[branchVar]), GE))
+
+		queue = append(queue, node{problem: branch1, depth: current.depth + 1})
+		queue = append(queue, node{problem: branch2, depth: current.depth + 1})
+	}
+
+	if bestSolution == nil {
+		return Solution{Optimal: false}
+	}
+
+	return roundAndRecalculate(*bestSolution, p.Objective)
+}
+
+func (p *Problem) solveContinuous() Solution {
+	numVars := len(p.Objective)
+	tableau := buildTableau(p, numVars)
+
+	optimal := simplex(tableau, numVars)
+	if !optimal {
+		return Solution{Optimal: false}
+	}
+
+	return extractSolution(tableau, numVars)
+}
+
+func (p *Problem) Clone() *Problem {
+	newProblem := &Problem{
+		Objective:   make([]float64, len(p.Objective)),
+		Constraints: make([]Constraint, len(p.Constraints)),
+	}
+	copy(newProblem.Objective, p.Objective)
+	for i := range p.Constraints {
+		newProblem.Constraints[i] = Constraint{
+			Coefficients: make([]float64, len(p.Constraints[i].Coefficients)),
+			Value:        p.Constraints[i].Value,
+			Type:         p.Constraints[i].Type,
+		}
+		copy(newProblem.Constraints[i].Coefficients, p.Constraints[i].Coefficients)
+	}
+	return newProblem
+}
+
+func makeVariableConstraint(varIndex int, numVars int, value float64, constraintType ConstraintType) Constraint {
+	constraint := Constraint{
+		Coefficients: make([]float64, numVars),
+		Value:        value,
+		Type:         constraintType,
+	}
+	constraint.Coefficients[varIndex] = 1
+	return constraint
+}
+
+func roundAndRecalculate(sol Solution, objective []float64) Solution {
+	sol.Vars = slicestuff.Map(func(v float64) float64 { return math.Round(v) }, sol.Vars)
+
+	// Recalculate objective value with rounded variables
+	sol.Value = 0.0
+	for i, v := range sol.Vars {
+		sol.Value += v * objective[i]
+	}
+	return sol
 }

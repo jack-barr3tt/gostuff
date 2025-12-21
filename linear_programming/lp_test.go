@@ -49,9 +49,9 @@ func TestSimplex(t *testing.T) {
 	solution2 := problem2.Solve(true, false)
 
 	test.AssertEqual(t, solution2.Optimal, true)
-	test.AssertEqual(t, solution2.Vars[0], 3.0)
-	test.AssertEqual(t, solution2.Vars[1], 7.0)
-	test.AssertEqual(t, solution2.Value, 23.0)
+	test.AssertEqual(t, solution2.Vars[0], 4.0)
+	test.AssertEqual(t, solution2.Vars[1], 6.0)
+	test.AssertEqual(t, solution2.Value, 24.0)
 
 	// Minimize P = 3x + 6y - 32z
 	// Subject to:
@@ -152,4 +152,63 @@ func TestSimplex(t *testing.T) {
 
 	test.AssertEqual(t, solution6.Optimal, true)
 	test.AssertEqual(t, solution6.Value, 107.0)
+
+	// Minimize P = sum of all 12 variables
+	// Subject to 10 equality constraints with 12 variables
+	problem7 := Problem{
+		Objective: []float64{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		Constraints: []Constraint{
+			{Coefficients: []float64{0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0}, Value: 57, Type: EQ},
+			{Coefficients: []float64{0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0}, Value: 31, Type: EQ},
+			{Coefficients: []float64{0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0}, Value: 44, Type: EQ},
+			{Coefficients: []float64{0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1}, Value: 54, Type: EQ},
+			{Coefficients: []float64{0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1}, Value: 68, Type: EQ},
+			{Coefficients: []float64{0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0}, Value: 54, Type: EQ},
+			{Coefficients: []float64{1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0}, Value: 52, Type: EQ},
+			{Coefficients: []float64{0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0}, Value: 48, Type: EQ},
+			{Coefficients: []float64{0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1}, Value: 62, Type: EQ},
+			{Coefficients: []float64{0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0}, Value: 47, Type: EQ},
+		},
+	}
+
+	solution7 := problem7.Solve(true, true)
+
+	test.AssertEqual(t, solution7.Optimal, true)
+}
+
+func TestDeepCopy(t *testing.T) {
+	original := Problem{
+		Objective: []float64{1, 2, 3},
+		Constraints: []Constraint{
+			{Coefficients: []float64{1, 2, 3}, Value: 10, Type: LE},
+			{Coefficients: []float64{4, 5, 6}, Value: 20, Type: GE},
+			{Coefficients: []float64{7, 8, 9}, Value: 30, Type: EQ},
+		},
+	}
+
+	copied := original.Clone()
+
+	// Verify values are equal
+	test.AssertEqual(t, len(copied.Objective), len(original.Objective))
+	test.AssertEqual(t, len(copied.Constraints), len(original.Constraints))
+	for i := range original.Objective {
+		test.AssertEqual(t, copied.Objective[i], original.Objective[i])
+	}
+	for i := range original.Constraints {
+		test.AssertEqual(t, copied.Constraints[i].Value, original.Constraints[i].Value)
+		test.AssertEqual(t, copied.Constraints[i].Type, original.Constraints[i].Type)
+		test.AssertEqual(t, len(copied.Constraints[i].Coefficients), len(original.Constraints[i].Coefficients))
+		for j := range original.Constraints[i].Coefficients {
+			test.AssertEqual(t, copied.Constraints[i].Coefficients[j], original.Constraints[i].Coefficients[j])
+		}
+	}
+
+	// Modify copied and verify original is unchanged
+	copied.Objective[0] = 999
+	copied.Constraints[0].Value = 999
+	copied.Constraints[0].Coefficients[0] = 999
+
+	test.AssertEqual(t, original.Objective[0], 1.0)
+	test.AssertEqual(t, original.Constraints[0].Value, 10.0)
+	test.AssertEqual(t, original.Constraints[0].Coefficients[0], 1.0)
 }
