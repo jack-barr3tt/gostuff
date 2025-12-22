@@ -273,8 +273,10 @@ func (p *Problem) findIntegerSolution(initial Solution) Solution {
 
 		if allIntegers(sol.Vars) {
 			sol = roundAndRecalculate(sol, current.problem.Objective)
-			if bestSolution == nil || sol.Value > bestSolution.Value {
-				bestSolution = &sol
+			if current.problem.isFeasible(sol.Vars) {
+				if bestSolution == nil || sol.Value > bestSolution.Value {
+					bestSolution = &sol
+				}
 			}
 			continue
 		}
@@ -342,6 +344,31 @@ func makeVariableConstraint(varIndex int, numVars int, value float64, constraint
 	}
 	constraint.Coefficients[varIndex] = 1
 	return constraint
+}
+
+func (p *Problem) isFeasible(vals []float64) bool {
+	for _, c := range p.Constraints {
+		sum := 0.0
+		for i, coeff := range c.Coefficients {
+			sum += coeff * vals[i]
+		}
+
+		switch c.Type {
+		case LE:
+			if sum > c.Value+1e-10 {
+				return false
+			}
+		case GE:
+			if sum < c.Value-1e-10 {
+				return false
+			}
+		case EQ:
+			if math.Abs(sum-c.Value) > 1e-10 {
+				return false
+			}
+		}
+	}
+	return true
 }
 
 func roundAndRecalculate(sol Solution, objective []float64) Solution {
