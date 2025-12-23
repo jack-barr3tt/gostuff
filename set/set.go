@@ -4,6 +4,10 @@ type Set[T comparable] struct {
 	data map[T]bool
 }
 
+func New[T comparable]() Set[T] {
+	return Set[T]{data: make(map[T]bool)}
+}
+
 func FromSlice[T comparable](items []T) Set[T] {
 	s := Set[T]{data: make(map[T]bool)}
 	for _, item := range items {

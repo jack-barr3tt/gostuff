@@ -6,6 +6,12 @@ import (
 	"github.com/jack-barr3tt/gostuff/test"
 )
 
+func TestNew(t *testing.T) {
+	s := New[int]()
+
+	test.AssertEqual(t, s.Size(), 0)
+}
+
 func TestFromSlice(t *testing.T) {
 	s := FromSlice([]int{1, 2, 3, 2, 1})
 
