@@ -28,12 +28,14 @@ func (s Set[T]) ToSlice() []T {
 	return items
 }
 
-func (s Set[T]) Add(item T) {
+func (s Set[T]) Add(item T) Set[T] {
 	s.data[item] = true
+	return s
 }
 
-func (s Set[T]) Remove(item T) {
+func (s Set[T]) Remove(item T) Set[T] {
 	delete(s.data, item)
+	return s
 }
 
 func (s Set[T]) Has(item T) bool {
