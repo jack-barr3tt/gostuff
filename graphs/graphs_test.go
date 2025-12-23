@@ -266,3 +266,36 @@ func TestSubgraphs(t *testing.T) {
 
 	test.AssertSlicesEqual(t, subgraphs, expected)
 }
+
+func TestAllPaths(t *testing.T) {
+	// From Advent of Code 2025 Day 11 example
+	g, _ := NewGraph(
+		[]string{"aaa", "you", "bbb", "ccc", "ddd", "eee", "fff", "ggg", "hhh", "iii", "out"},
+		map[string][]Edge{
+			"aaa": {{Node: "you", Cost: 1}, {Node: "hhh", Cost: 1}},
+			"you": {{Node: "bbb", Cost: 1}, {Node: "ccc", Cost: 1}},
+			"bbb": {{Node: "ddd", Cost: 1}, {Node: "eee", Cost: 1}},
+			"ccc": {{Node: "ddd", Cost: 1}, {Node: "eee", Cost: 1}, {Node: "fff", Cost: 1}},
+			"ddd": {{Node: "ggg", Cost: 1}},
+			"eee": {{Node: "out", Cost: 1}},
+			"fff": {{Node: "out", Cost: 1}},
+			"ggg": {{Node: "out", Cost: 1}},
+			"hhh": {{Node: "ccc", Cost: 1}, {Node: "fff", Cost: 1}, {Node: "iii", Cost: 1}},
+			"iii": {{Node: "out", Cost: 1}},
+			"out": {},
+		},
+	)
+
+	paths := g.AllPaths("you", "out")
+
+	expected := [][]string{
+		{"you", "bbb", "ddd", "ggg", "out"},
+		{"you", "bbb", "eee", "out"},
+		{"you", "ccc", "ddd", "ggg", "out"},
+		{"you", "ccc", "eee", "out"},
+		{"you", "ccc", "fff", "out"},
+	}
+
+	test.AssertEqual(t, len(paths), 5)
+	test.AssertSlicesEqual(t, paths, expected)
+}

@@ -229,6 +229,43 @@ func (g Graph) reconstructAllPaths(cameFrom map[string][]string, current string)
 	return paths
 }
 
+// AllPaths returns all paths from source to target using depth-first search.
+// Returns nil if source or target don't exist, or if no path exists.
+func (g Graph) AllPaths(source, target string) [][]string {
+	if _, ok := g.At(source); !ok {
+		return nil
+	}
+	if _, ok := g.At(target); !ok {
+		return nil
+	}
+
+	var paths [][]string
+	visited := make(map[string]bool)
+
+	var dfs func(path []string)
+	dfs = func(path []string) {
+		current := path[len(path)-1]
+		if current == target {
+			pathCopy := make([]string, len(path))
+			copy(pathCopy, path)
+			paths = append(paths, pathCopy)
+			return
+		}
+
+		visited[current] = true
+		currNode, _ := g.At(current)
+		for _, edge := range currNode.Adj {
+			if !visited[edge.Node] {
+				dfs(append(path, edge.Node))
+			}
+		}
+		visited[current] = false
+	}
+
+	dfs([]string{source})
+	return paths
+}
+
 func (g Graph) DFT(start string, visit func(n Node)) {
 	visited := make(map[string]bool)
 	var dfs func(n *Node)
