@@ -318,3 +318,7 @@ func (g Graph) Subgraphs() []string {
 
 	return starts
 }
+
+func (g Graph) GetNodes() []string {
+	return maps.Keys(g.nodeIds)
+}

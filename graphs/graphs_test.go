@@ -298,4 +298,41 @@ func TestAllPaths(t *testing.T) {
 
 	test.AssertEqual(t, len(paths), 5)
 	test.AssertSlicesEqual(t, paths, expected)
+
+	// Test with cycles to ensure we don't get stuck in infinite loops
+	g2, _ := NewGraph(
+		[]string{"A", "B", "C", "D"},
+		map[string][]Edge{
+			"A": {{Node: "B", Cost: 1}},
+			"B": {{Node: "C", Cost: 1}, {Node: "A", Cost: 1}},
+			"C": {{Node: "D", Cost: 1}, {Node: "A", Cost: 1}},
+			"D": {},
+		},
+	)
+
+	paths2 := g2.AllPaths("A", "D")
+
+	expected2 := [][]string{
+		{"A", "B", "C", "D"},
+	}
+
+	test.AssertEqual(t, len(paths2), 1)
+	test.AssertSlicesEqual(t, paths2, expected2)
+}
+
+func TestGetNodes(t *testing.T) {
+	g, _ := NewGraph(
+		[]string{"A", "B", "C", "D"},
+		map[string][]Edge{
+			"A": {{Node: "B", Cost: 1}},
+			"B": {{Node: "C", Cost: 1}, {Node: "A", Cost: 1}},
+			"C": {{Node: "D", Cost: 1}, {Node: "A", Cost: 1}},
+			"D": {},
+		},
+	)
+
+	nodes := g.GetNodes()
+	expected := []string{"A", "B", "C", "D"}
+
+	test.AssertSlicesEqual(t, nodes, expected)
 }
