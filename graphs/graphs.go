@@ -241,9 +241,10 @@ func (g Graph) AllPaths(source, target string) [][]string {
 
 	var paths [][]string
 	visited := make(map[string]bool)
+	path := make([]string, 0, 64) // Pre-allocate with reasonable capacity
 
-	var dfs func(path []string)
-	dfs = func(path []string) {
+	var dfs func()
+	dfs = func() {
 		current := path[len(path)-1]
 		if current == target {
 			pathCopy := make([]string, len(path))
@@ -256,13 +257,16 @@ func (g Graph) AllPaths(source, target string) [][]string {
 		currNode, _ := g.At(current)
 		for _, edge := range currNode.Adj {
 			if !visited[edge.Node] {
-				dfs(append(path, edge.Node))
+				path = append(path, edge.Node)
+				dfs()
+				path = path[:len(path)-1]
 			}
 		}
 		visited[current] = false
 	}
 
-	dfs([]string{source})
+	path = append(path, source)
+	dfs()
 	return paths
 }
 
