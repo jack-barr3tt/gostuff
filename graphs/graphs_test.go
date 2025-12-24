@@ -320,6 +320,50 @@ func TestAllPaths(t *testing.T) {
 	test.AssertSlicesEqual(t, paths2, expected2)
 }
 
+func TestCountPaths(t *testing.T) {
+	// Same graph as TestAllPaths first case
+	g, _ := NewGraph(
+		[]string{"aaa", "you", "bbb", "ccc", "ddd", "eee", "fff", "ggg", "hhh", "iii", "out"},
+		map[string][]Edge{
+			"aaa": {{Node: "you", Cost: 1}, {Node: "hhh", Cost: 1}},
+			"you": {{Node: "bbb", Cost: 1}, {Node: "ccc", Cost: 1}},
+			"bbb": {{Node: "ddd", Cost: 1}, {Node: "eee", Cost: 1}},
+			"ccc": {{Node: "ddd", Cost: 1}, {Node: "eee", Cost: 1}, {Node: "fff", Cost: 1}},
+			"ddd": {{Node: "ggg", Cost: 1}},
+			"eee": {{Node: "out", Cost: 1}},
+			"fff": {{Node: "out", Cost: 1}},
+			"ggg": {{Node: "out", Cost: 1}},
+			"hhh": {{Node: "ccc", Cost: 1}, {Node: "fff", Cost: 1}, {Node: "iii", Cost: 1}},
+			"iii": {{Node: "out", Cost: 1}},
+			"out": {},
+		},
+	)
+
+	count := g.CountPaths("you", "out")
+	test.AssertEqual(t, count, 5)
+
+	// Test with cycles
+	g2, _ := NewGraph(
+		[]string{"A", "B", "C", "D"},
+		map[string][]Edge{
+			"A": {{Node: "B", Cost: 1}},
+			"B": {{Node: "C", Cost: 1}, {Node: "A", Cost: 1}},
+			"C": {{Node: "D", Cost: 1}, {Node: "A", Cost: 1}},
+			"D": {},
+		},
+	)
+
+	count2 := g2.CountPaths("A", "D")
+	test.AssertEqual(t, count2, 1)
+
+	// Test non-existent nodes
+	count3 := g.CountPaths("you", "nonexistent")
+	test.AssertEqual(t, count3, -1)
+
+	count4 := g.CountPaths("nonexistent", "out")
+	test.AssertEqual(t, count4, -1)
+}
+
 func TestGetNodes(t *testing.T) {
 	g, _ := NewGraph(
 		[]string{"A", "B", "C", "D"},

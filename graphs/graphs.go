@@ -270,6 +270,38 @@ func (g Graph) AllPaths(source, target string) [][]string {
 	return paths
 }
 
+func (g Graph) CountPaths(source, target string) int {
+	if _, ok := g.At(source); !ok {
+		return -1
+	}
+	if _, ok := g.At(target); !ok {
+		return -1
+	}
+
+	count := 0
+	visited := make(map[string]bool)
+
+	var dfs func(current string)
+	dfs = func(current string) {
+		if current == target {
+			count++
+			return
+		}
+
+		visited[current] = true
+		currNode, _ := g.At(current)
+		for _, edge := range currNode.Adj {
+			if !visited[edge.Node] {
+				dfs(edge.Node)
+			}
+		}
+		visited[current] = false
+	}
+
+	dfs(source)
+	return count
+}
+
 func (g Graph) DFT(start string, visit func(n Node)) {
 	visited := make(map[string]bool)
 	var dfs func(n *Node)
