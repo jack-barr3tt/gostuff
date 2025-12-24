@@ -326,3 +326,11 @@ func (g Graph) Subgraphs() []string {
 func (g Graph) GetNodes() []string {
 	return maps.Keys(g.nodeIds)
 }
+
+func (g Graph) GetEdges(node string) []Edge {
+	n, ok := g.At(node)
+	if !ok {
+		return []Edge{}
+	}
+	return n.Adj
+}

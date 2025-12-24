@@ -336,3 +336,30 @@ func TestGetNodes(t *testing.T) {
 
 	test.AssertSlicesEqual(t, nodes, expected)
 }
+
+func TestGetEdges(t *testing.T) {
+	g, _ := NewGraph(
+		[]string{"A", "B", "C"},
+		map[string][]Edge{
+			"A": {{Node: "B", Cost: 1}, {Node: "C", Cost: 2}},
+			"B": {{Node: "C", Cost: 3}},
+			"C": {},
+		},
+	)
+
+	edgesA := g.GetEdges("A")
+	expectedA := []Edge{{Node: "B", Cost: 1}, {Node: "C", Cost: 2}}
+	test.AssertSlicesEqual(t, edgesA, expectedA)
+
+	edgesB := g.GetEdges("B")
+	expectedB := []Edge{{Node: "C", Cost: 3}}
+	test.AssertSlicesEqual(t, edgesB, expectedB)
+
+	edgesC := g.GetEdges("C")
+	expectedC := []Edge{}
+	test.AssertSlicesEqual(t, edgesC, expectedC)
+
+	edgesD := g.GetEdges("D")
+	expectedD := []Edge{}
+	test.AssertSlicesEqual(t, edgesD, expectedD)
+}
