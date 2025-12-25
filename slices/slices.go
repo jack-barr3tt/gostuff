@@ -318,3 +318,11 @@ func Max[T ~int | ~float64 | ~int64 | ~float32](l []T) T {
 	}
 	return max
 }
+
+func AsMap[T any](l []T) map[int]T {
+	out := make(map[int]T)
+	for i, v := range l {
+		out[i] = v
+	}
+	return out
+}

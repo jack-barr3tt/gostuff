@@ -390,3 +390,11 @@ func TestMax(t *testing.T) {
 
 	test.AssertEqual(t, Max([]float64{3.3, 1.1, 2.2}), 3.3)
 }
+
+func TestAsMap(t *testing.T) {
+	test.AssertEqual(t, AsMap([]string{"a", "b", "c"}), map[int]string{
+		0: "a",
+		1: "b",
+		2: "c",
+	})
+}
