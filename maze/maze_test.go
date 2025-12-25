@@ -216,3 +216,22 @@ func TestFloodFill(t *testing.T) {
 
 	test.AssertEqual(t, maze, expected)
 }
+
+func TestInsertSubMazeAt(t *testing.T) {
+	maze := NewMaze(`#.#
+.#.
+#.#`)
+
+	subMaze := NewMaze(`.#.
+#.#
+.#.`)
+
+	expected := NewMaze(`###
+###
+###`)
+
+	success := maze.InsertSubMazeAt(subMaze, types.Point{0, 0}, []rune{'.'})
+
+	test.AssertEqual(t, success, true)
+	test.AssertEqual(t, maze, expected)
+}

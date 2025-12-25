@@ -3,6 +3,7 @@ package maze
 import (
 	"strings"
 
+	"github.com/jack-barr3tt/gostuff/set"
 	"github.com/jack-barr3tt/gostuff/slices"
 	"github.com/jack-barr3tt/gostuff/types"
 )
@@ -150,4 +151,44 @@ func (m Maze[T]) FloodFill(start types.Point, empty, fill T) {
 			}
 		}
 	}
+}
+
+func (m Maze[T]) InsertSubMazeAt(m2 Maze[T], origin types.Point, empty []T) bool {
+	emptySet := set.FromSlice(empty)
+
+	newMaze := m.Clone()
+
+	origin, ok := m.Move(origin, types.Direction{0, 0})
+	if !ok {
+		return ok
+	}
+
+	for x := 0; x < len(m2[0]); x++ {
+		for y := 0; y < len(m2); y++ {
+			// Bounds checking
+			curr, ok := m.Move(origin, types.East.Multiply(x).Add(types.North.Multiply(y)))
+			if !ok {
+				return false
+			}
+			n, ok := m2.Move(types.Point{0, 0}, types.East.Multiply(x).Add(types.North.Multiply(y)))
+			if !ok {
+				return false
+			}
+
+			if emptySet.Has(m2.At(n)) {
+				continue
+			}
+
+			// Check space is empty
+			if !emptySet.Has(m.At(curr)) {
+				return false
+			}
+
+			// Insert
+			newMaze.Set(curr, m2.At(n))
+		}
+	}
+
+	copy(m, newMaze)
+	return true
 }
