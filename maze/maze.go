@@ -192,3 +192,11 @@ func (m Maze[T]) InsertSubMazeAt(m2 Maze[T], origin types.Point, empty []T) bool
 	copy(m, newMaze)
 	return true
 }
+
+func (m Maze[T]) Width() int {
+	return len(m[0])
+}
+
+func (m Maze[T]) Height() int {
+	return len(m)
+}

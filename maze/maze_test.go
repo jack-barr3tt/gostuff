@@ -235,3 +235,15 @@ func TestInsertSubMazeAt(t *testing.T) {
 	test.AssertEqual(t, success, true)
 	test.AssertEqual(t, maze, expected)
 }
+
+func TestMazeWidth(t *testing.T) {
+	maze := NewMaze(`######`)
+
+	test.AssertEqual(t, maze.Width(), 6)
+}
+
+func TestMazeHeight(t *testing.T) {
+	maze := NewMaze(`######`)
+
+	test.AssertEqual(t, maze.Height(), 1)
+}
